@@ -2,7 +2,7 @@ import pygame
 import Config
 import Colors
 
-WIN = pygame.display.set_mode((Config.SCREEN_LENGTH, Config.SCREEN_HEIGHT ))
+WIN = pygame.display.set_mode((Config.SCREEN_LENGTH, Config.SCREEN_HEIGHT))
 CLOCK = pygame.time.Clock()
 
 '''
@@ -17,7 +17,6 @@ class Pixel:
 '''
 
 
-
 class Screen:
     def __init__(self):
         pass
@@ -28,41 +27,23 @@ class Screen:
         pygame.display.update()
 
     def generate_pixels(self):
-        pixels_x_amount = Config.SCREEN_LENGTH // Config.PIXEL_LENGTH
-        pixels_y_amount = Config.SCREEN_HEIGHT // Config.PIXEL_HEIGHT
-
-        print(pixels_x_amount,pixels_y_amount)
         offset_x = 0
         offset_y = 0
 
-        filler_x = 0
-        filler_y = 0
+        for x in range(Config.WINDOW_LENGTH):
+            for y in range(Config.WINDOW_HEIGHT):
+                pygame.draw.rect(WIN, Colors.BLACK,
+                                 pygame.Rect(offset_x, offset_y, Config.PIXEL_LENGTH, Config.PIXEL_HEIGHT), 1)
 
+                offset_y += Config.PIXEL_HEIGHT - 1
 
-        for x in range(pixels_x_amount):
-            for y in range(pixels_y_amount):
-                pygame.draw.rect(WIN,Colors.BLACK,pygame.Rect(offset_x, offset_y, Config.PIXEL_LENGTH, Config.PIXEL_HEIGHT),1)
-
-                offset_y += Config.PIXEL_HEIGHT -1
-                filler_y += 1
-
-                if filler_y == Config.PIXEL_HEIGHT -1:
-                    print(y)
-                    y-=1
-                    print(y)
-                    filler_y = 0
-
-            offset_x += Config.PIXEL_LENGTH-1
-            filler_x +=1
+            offset_x += Config.PIXEL_LENGTH - 1
             offset_y = 0
 
-            if filler_x == Config.PIXEL_LENGTH -1:
-                x-=1
-                filler_x = 0
 
-
-
-
+        #generate drawing space
+        pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
+                         pygame.Rect(0, 0, Config.WINDOW_LENGTH * (Config.PIXEL_LENGTH - 1), Config.WINDOW_HEIGHT * (Config.PIXEL_HEIGHT - 1)), Config.PIXEL_LENGTH)
 
 class Paint:
     def __init__(self):
