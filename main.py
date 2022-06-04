@@ -5,25 +5,28 @@ import Colors
 WIN = pygame.display.set_mode((Config.SCREEN_LENGTH, Config.SCREEN_HEIGHT))
 CLOCK = pygame.time.Clock()
 
-'''
+
 class Pixel:
-    def __init__(self, x, y):
+    def __init__(self, x, y, color):
         self.x = x
         self.y = y
-        self.length = Config.SCREEN_LENGTH
-        self.height = Config.SCREEN_HEIGHT
+        self.color = color
+        self.length = Config.PIXEL_LENGTH
+        self.height = Config.PIXEL_HEIGHT
         self.rect = pygame.Rect(x, y, self.length, self.height)
-
-'''
 
 
 class Screen:
     def __init__(self):
-        pass
+        self.draw_surface_length = Config.WINDOW_LENGTH * (Config.PIXEL_LENGTH - 1)
+        self.draw_surface_height = Config.WINDOW_HEIGHT * (Config.PIXEL_HEIGHT - 1) + 1
+        self.tool_menu_length = Config.SCREEN_LENGTH - self.draw_surface_length
+        self.tool_menu_height = self.draw_surface_height
 
     def draw_the_window(self):
         WIN.fill(Colors.WHITE)
         self.generate_pixels()
+        self.generate_tool_menu()
         pygame.display.update()
 
     def generate_pixels(self):
@@ -32,19 +35,28 @@ class Screen:
 
         for x in range(Config.WINDOW_LENGTH):
             for y in range(Config.WINDOW_HEIGHT):
-                pygame.draw.rect(WIN, Colors.BLACK,
-                                 pygame.Rect(offset_x, offset_y, Config.PIXEL_LENGTH, Config.PIXEL_HEIGHT), 1)
+                pixel = Pixel(offset_x, offset_y, Colors.RED)
+
+                pygame.draw.rect(WIN, pixel.color, pixel, 1)
 
                 offset_y += Config.PIXEL_HEIGHT - 1
 
             offset_x += Config.PIXEL_LENGTH - 1
             offset_y = 0
 
-
-        #generate drawing space
+        # generate drawing space
         pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
-                         pygame.Rect(0, 0, Config.WINDOW_LENGTH * (Config.PIXEL_LENGTH - 1), Config.WINDOW_HEIGHT * (Config.PIXEL_HEIGHT - 1)), Config.PIXEL_LENGTH)
+                         pygame.Rect(0, 0, self.draw_surface_length, self.draw_surface_height), Config.PIXEL_LENGTH)
 
+    def generate_tool_menu(self):
+        pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
+                         pygame.Rect(self.draw_surface_length, 0, self.tool_menu_length, self.tool_menu_height),
+                         Config.PIXEL_LENGTH)
+
+
+
+    def find_pixel_color(self):
+        pass
 class Paint:
     def __init__(self):
         self.run = True
