@@ -16,8 +16,6 @@ class Pixel:
         self.rect = pygame.Rect(x, y, self.length, self.height)
 
 
-
-
 class Screen:
     def __init__(self):
         self.draw_surface_length = Config.WINDOW_LENGTH * (Config.PIXEL_LENGTH - 1)
@@ -38,7 +36,6 @@ class Screen:
         offset_x = 0
         offset_y = 0
 
-
         for x in range(Config.WINDOW_LENGTH):
             for y in range(Config.WINDOW_HEIGHT):
                 self.pixels.append(Pixel(offset_x, offset_y, Colors.WHITE))
@@ -47,34 +44,18 @@ class Screen:
             offset_x += Config.PIXEL_LENGTH - 1
             offset_y = 0
 
-
-
     def generate_tool_menu(self):
 
         pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
                          pygame.Rect(0, 0, self.draw_surface_length, self.draw_surface_height), Config.PIXEL_LENGTH)
 
-
         pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
                          pygame.Rect(self.draw_surface_length, 0, self.tool_menu_length, self.tool_menu_height),
                          Config.PIXEL_LENGTH)
 
-
-
     def draw_the_drawing(self):
         for i in self.pixels:
-
             pygame.draw.rect(WIN, i.color, i)
-
-
-
-
-
-
-
-
-
-
 
 
 class Paint:
@@ -85,13 +66,11 @@ class Paint:
         self.drawing = False
         self.main_loop()
 
-
     def main_loop(self):
         while self.run:
             CLOCK.tick(Config.FPS)
             self.screen.draw_the_window()
             self.check_events()
-
 
     def check_events(self):
         for event in pygame.event.get():
@@ -108,7 +87,6 @@ class Paint:
                 for pixel in self.screen.pixels:
                     if pixel.rect.collidepoint(pygame.mouse.get_pos()):
                         pixel.color = Colors.BLUE
-
 
 
 def main():
