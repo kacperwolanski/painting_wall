@@ -1,7 +1,7 @@
 import pygame
 import Config
 import Colors
-
+import random
 WIN = pygame.display.set_mode((Config.SCREEN_LENGTH, Config.SCREEN_HEIGHT))
 CLOCK = pygame.time.Clock()
 
@@ -44,18 +44,65 @@ class Screen:
             offset_x += Config.PIXEL_LENGTH - 1
             offset_y = 0
 
-    def generate_tool_menu(self):
+    def draw_the_drawing(self):
+        for i in self.pixels:
+            pygame.draw.rect(WIN, i.color, i)
 
+    def generate_tool_menu(self):
+        self.draw_frames()
+        self.draw_Color_palette()
+
+    def draw_frames(self):
+        # draw surface
         pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
                          pygame.Rect(0, 0, self.draw_surface_length, self.draw_surface_height), Config.PIXEL_LENGTH)
-
+        # main menu
         pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
                          pygame.Rect(self.draw_surface_length, 0, self.tool_menu_length, self.tool_menu_height),
                          Config.PIXEL_LENGTH)
 
-    def draw_the_drawing(self):
-        for i in self.pixels:
-            pygame.draw.rect(WIN, i.color, i)
+    def draw_Color_palette(self):
+
+        palette_height = self.tool_menu_height // 10
+        palettle_length =self.tool_menu_length
+
+        # draw "colors" frame
+        pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
+                         pygame.Rect(self.draw_surface_length + self.tool_menu_length // 4, Config.PIXEL_LENGTH * 2,
+                                     self.tool_menu_length // 2, Config.PIXEL_LENGTH * 5),
+                         Config.PIXEL_LENGTH)
+        # draw palette surface
+        pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
+                         pygame.Rect(self.draw_surface_length, Config.PIXEL_LENGTH * 6,palettle_length ,
+                                     palette_height),
+                         Config.PIXEL_LENGTH)
+        # draw color samples
+
+        sample_length = (palette_height-Config.PIXEL_LENGTH) // 3
+
+        x_pos = self.draw_surface_length + Config.PIXEL_LENGTH
+        y_pos = Config.PIXEL_LENGTH * 7
+        index = 0
+        for i in range(3):
+            for j in range(palettle_length // sample_length):
+
+                sample = pygame.Rect(x_pos, y_pos, sample_length ,sample_length)
+
+                if index < len(Colors.COLORS): color = Colors.COLORS[index]
+                else: color = Colors.WHITE
+
+                pygame.draw.rect(WIN,color,sample)
+
+            #grid
+                pygame.draw.rect(WIN, Colors.LIGHT_GRAY, pygame.Rect(x_pos,y_pos, sample_length, sample_length),1)
+
+
+                x_pos +=sample_length
+                index+=1
+            y_pos += sample_length
+            x_pos =self.draw_surface_length + Config.PIXEL_LENGTH
+
+
 
 
 class Paint:
