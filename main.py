@@ -2,6 +2,7 @@ import pygame
 import Config
 import Colors
 import random
+
 WIN = pygame.display.set_mode((Config.SCREEN_LENGTH, Config.SCREEN_HEIGHT))
 CLOCK = pygame.time.Clock()
 
@@ -23,7 +24,13 @@ class Screen:
         self.tool_menu_length = Config.SCREEN_LENGTH - self.draw_surface_length
         self.tool_menu_height = self.draw_surface_height
         self.pixels = []
+
         self.generate_pixels()
+
+        # color staff
+        self.samples = []
+        self.color_choose = -1
+        self.actual_drawing_width = 10
 
     def draw_the_window(self):
         WIN.fill(Colors.WHITE)
@@ -45,8 +52,10 @@ class Screen:
             offset_y = 0
 
     def draw_the_drawing(self):
+
         for i in self.pixels:
             pygame.draw.rect(WIN, i.color, i)
+
 
     def generate_tool_menu(self):
         self.draw_frames()
@@ -64,7 +73,7 @@ class Screen:
     def draw_Color_palette(self):
 
         palette_height = self.tool_menu_height // 10
-        palettle_length =self.tool_menu_length
+        palettle_length = self.tool_menu_length
 
         # draw "colors" frame
         pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
@@ -73,12 +82,12 @@ class Screen:
                          Config.PIXEL_LENGTH)
         # draw palette surface
         pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
-                         pygame.Rect(self.draw_surface_length, Config.PIXEL_LENGTH * 6,palettle_length ,
+                         pygame.Rect(self.draw_surface_length, Config.PIXEL_LENGTH * 6, palettle_length,
                                      palette_height),
                          Config.PIXEL_LENGTH)
         # draw color samples
 
-        sample_length = (palette_height-Config.PIXEL_LENGTH) // 3
+        sample_length = (palette_height - Config.PIXEL_LENGTH) // 3
 
         x_pos = self.draw_surface_length + Config.PIXEL_LENGTH
         y_pos = Config.PIXEL_LENGTH * 7
@@ -86,31 +95,37 @@ class Screen:
         for i in range(3):
             for j in range(palettle_length // sample_length):
 
-                sample = pygame.Rect(x_pos, y_pos, sample_length ,sample_length)
+                sample = pygame.Rect(x_pos, y_pos, sample_length, sample_length)
 
-                if index < len(Colors.COLORS): color = Colors.COLORS[index]
-                else: color = Colors.WHITE
+                if index < len(Colors.COLORS):
+                    color = Colors.COLORS[index]
+                else:
+                    color = Colors.WHITE
 
-                pygame.draw.rect(WIN,color,sample)
+                self.samples.append([sample, color])
 
-            #grid
-                pygame.draw.rect(WIN, Colors.LIGHT_GRAY, pygame.Rect(x_pos,y_pos, sample_length, sample_length),1)
+                pygame.draw.rect(WIN, color, sample)
 
+                # grid
+                pygame.draw.rect(WIN, Colors.LIGHT_GRAY, pygame.Rect(x_pos, y_pos, sample_length, sample_length), 1)
 
-                x_pos +=sample_length
-                index+=1
+                x_pos += sample_length
+                index += 1
             y_pos += sample_length
-            x_pos =self.draw_surface_length + Config.PIXEL_LENGTH
+            x_pos = self.draw_surface_length + Config.PIXEL_LENGTH
 
-
+            if self.color_choose != -1:
+                pygame.draw.rect(WIN, Colors.BLACK, self.samples[self.color_choose][0], 4)
 
 
 class Paint:
     def __init__(self):
         self.run = True
         self.actual_color = Colors.BLACK
+
         self.screen = Screen()
         self.drawing = False
+
         self.main_loop()
 
     def main_loop(self):
@@ -131,9 +146,19 @@ class Paint:
                 self.drawing = False
 
             if self.drawing:
-                for pixel in self.screen.pixels:
-                    if pixel.rect.collidepoint(pygame.mouse.get_pos()):
-                        pixel.color = Colors.BLUE
+                for pixel in range(len(self.screen.pixels)):
+                    if self.screen.pixels[pixel].rect.collidepoint(pygame.mouse.get_pos()):
+                        for w in range(self.screen.actual_drawing_width):
+                            if pixel+w < len(self.screen.pixels):
+                                self.screen.pixels[pixel+w].color = self.actual_color
+                                self.screen.pixels[pixel+w+Config.WINDOW_HEIGHT].color = self.actual_color
+
+            for s in self.screen.samples:
+                if s[0].collidepoint(pygame.mouse.get_pos()):
+                    self.screen.color_choose = self.screen.samples.index(s)
+
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        self.actual_color = s[1]
 
 
 def main():
