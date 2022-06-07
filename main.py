@@ -5,6 +5,35 @@ import random
 
 WIN = pygame.display.set_mode((Config.SCREEN_LENGTH, Config.SCREEN_HEIGHT))
 CLOCK = pygame.time.Clock()
+pygame.display.set_caption('Painting wall')
+
+pygame.font.init()
+font = pygame.font.Font('freesansbold.ttf', 10)
+
+class Slider:
+    def __init__(self, x,y,variable,length,height,frame_color, buttom_color):
+        self.x = x
+        self.y = y
+        self.variable = variable
+        self.length = length
+        self.height = height
+        self.frame_color = frame_color
+        self.buttom_color = buttom_color
+
+    def draw_the_slider(self):
+        #draw the frame
+        pygame.draw.rect(WIN,self.frame_color,
+                         pygame.Rect(self.x, self.y, self.length,self.height),Config.PIXEL_LENGTH)
+
+
+        # draw the buttom
+        pygame.draw.rect(WIN, self.buttom_color,
+                         pygame.Rect(self.x, self.y, self.length, self.height), Config.PIXEL_LENGTH)
+
+
+
+    def animate_the_slider(self):
+
 
 
 class Pixel:
@@ -28,9 +57,11 @@ class Screen:
         self.generate_pixels()
 
         # color staff
+        self.actual_color = Colors.BLACK
         self.samples = []
         self.color_choose = -1
-        self.actual_drawing_width = 10
+        self.actual_drawing_width = 1
+        self.width_adjust = True
 
     def draw_the_window(self):
         WIN.fill(Colors.WHITE)
@@ -56,7 +87,6 @@ class Screen:
         for i in self.pixels:
             pygame.draw.rect(WIN, i.color, i)
 
-
     def generate_tool_menu(self):
         self.draw_frames()
         self.draw_Color_palette()
@@ -75,11 +105,20 @@ class Screen:
         palette_height = self.tool_menu_height // 10
         palettle_length = self.tool_menu_length
 
-        # draw "colors" frame
+        # draw "Adjust drawing width" frame
         pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
                          pygame.Rect(self.draw_surface_length + self.tool_menu_length // 4, Config.PIXEL_LENGTH * 2,
                                      self.tool_menu_length // 2, Config.PIXEL_LENGTH * 5),
                          Config.PIXEL_LENGTH)
+
+        # text render staff
+        self.text_rendering('Adjust drawing width', Colors.BLACK, Colors.LIGHT_GRAY,
+                            (self.draw_surface_length + self.tool_menu_length // 2, Config.PIXEL_LENGTH))
+
+        # width adjusting
+        if self.width_adjust:
+            self.width_adjusting()
+
         # draw palette surface
         pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
                          pygame.Rect(self.draw_surface_length, Config.PIXEL_LENGTH * 6, palettle_length,
@@ -117,15 +156,43 @@ class Screen:
             if self.color_choose != -1:
                 pygame.draw.rect(WIN, Colors.BLACK, self.samples[self.color_choose][0], 4)
 
+    def width_adjusting(self):
+        # draw width adjusting frame
+        pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
+                         pygame.Rect(
+                             self.draw_surface_length + self.tool_menu_length * 3 // 4 - Config.PIXEL_LENGTH,
+                             Config.PIXEL_LENGTH,
+                             self.tool_menu_length // 8 + 2 * Config.PIXEL_LENGTH, Config.PIXEL_LENGTH * 5),
+                         Config.PIXEL_LENGTH)
+
+        pygame.draw.rect(WIN, self.actual_color,
+                         pygame.Rect(self.draw_surface_length + self.tool_menu_length * 3 // 4, Config.PIXEL_LENGTH,
+                                     self.tool_menu_length // 8, Config.PIXEL_LENGTH * 5))
+
+        # blit actual width info
+        if self.actual_color == Colors.BLACK:
+            color = Colors.WHITE
+        else:
+            color = Colors.BLACK
+
+        self.text_rendering('W: ' + str(self.actual_drawing_width), color, self.actual_color, (
+        self.draw_surface_length + self.tool_menu_length * 3 // 4 + self.tool_menu_length // 16,
+        Config.PIXEL_LENGTH * 3))
+
+        # generate slider
+
+    def text_rendering(self, text, front_color, back_color, textRect_center):
+        text = font.render(text, True, front_color, back_color)
+        textRect = text.get_rect()
+        textRect.center = textRect_center
+        WIN.blit(text, textRect)
+
 
 class Paint:
     def __init__(self):
         self.run = True
-        self.actual_color = Colors.BLACK
-
         self.screen = Screen()
         self.drawing = False
-
         self.main_loop()
 
     def main_loop(self):
@@ -148,17 +215,18 @@ class Paint:
             if self.drawing:
                 for pixel in range(len(self.screen.pixels)):
                     if self.screen.pixels[pixel].rect.collidepoint(pygame.mouse.get_pos()):
-                        for w in range(self.screen.actual_drawing_width):
-                            if pixel+w < len(self.screen.pixels):
-                                self.screen.pixels[pixel+w].color = self.actual_color
-                                self.screen.pixels[pixel+w+Config.WINDOW_HEIGHT].color = self.actual_color
+                        for w_x in range(self.screen.actual_drawing_width):
+                            for w_y in range(self.screen.actual_drawing_width):
+                                self.screen.pixels[
+                                    pixel + w_x * Config.WINDOW_HEIGHT + w_y].color = self.screen.actual_color
+                        # self.screen.width_adjusting = True
 
             for s in self.screen.samples:
                 if s[0].collidepoint(pygame.mouse.get_pos()):
                     self.screen.color_choose = self.screen.samples.index(s)
 
                     if event.type == pygame.MOUSEBUTTONDOWN:
-                        self.actual_color = s[1]
+                        self.screen.actual_color = s[1]
 
 
 def main():
