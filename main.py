@@ -32,21 +32,38 @@ class Screen:
         self.tool_menu_length = Config.SCREEN_LENGTH - self.draw_surface_length
         self.tool_menu_height = self.draw_surface_height
         self.pixels = []
-        self.generate_pixels()
+
 
         # color staff
         self.actual_color = Colors.BLACK
         self.samples = []
         self.color_choose = -1
         self.actual_drawing_width = 1
-        self.seksik = 1
-        self.width_adjust = True
+
+
+        # tool staff
+        self.sliders = []
+
+
+
+
+    def generate_tools(self):
+        self.generate_pixels()
+
+        # generate width slider
+        self.actual_drawing_width = self.generate_sliders(WIN, self.draw_surface_length + self.tool_menu_length // 4,
+                                                          Config.PIXEL_LENGTH * 2,
+                                                          self.tool_menu_length // 2, Config.PIXEL_LENGTH * 5,
+                                                          Colors.LIGHT_GRAY, self.actual_color)
+
 
     def draw_the_window(self):
 
         WIN.fill(Colors.WHITE)
         self.draw_the_drawing()
-        self.generate_tool_menu()
+        self.draw_Color_palette()
+        self.draw_the_sliders()
+        self.draw_frames()
         self.blit_text()
         pygame.display.update()
 
@@ -76,9 +93,14 @@ class Screen:
         for i in self.pixels:
             pygame.draw.rect(WIN, i.color, i)
 
-    def generate_tool_menu(self):
-        self.draw_frames()
-        self.draw_Color_palette()
+    def draw_the_sliders(self):
+        for slider in self.sliders:
+            slider.draw_the_slider(Paint.drawing)
+
+
+
+
+
 
     def draw_frames(self):
         # draw surface
@@ -105,12 +127,6 @@ class Screen:
 
         palette_height = self.tool_menu_height // 10
         palettle_length = self.tool_menu_length
-
-        # width adjusting
-        if self.width_adjust:
-            self.width_adjusting()
-
-
         # draw palette surface
         pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
                          pygame.Rect(self.draw_surface_length, Config.PIXEL_LENGTH * 6, palettle_length,
@@ -148,14 +164,14 @@ class Screen:
             if self.color_choose != -1:
                 pygame.draw.rect(WIN, Colors.BLACK, self.samples[self.color_choose][0], 4)
 
-    def width_adjusting(self):
+    def generate_sliders(self,WIN,x,y,length,height,frame_color,buttom_color):
 
         # generate slider
-        slider = Slider.Slider(WIN,self.draw_surface_length + self.tool_menu_length // 4, Config.PIXEL_LENGTH * 2,
-                                self.tool_menu_length // 2, Config.PIXEL_LENGTH * 5,
-                               Colors.LIGHT_GRAY, self.actual_color,Paint.drawing)
+        slider = Slider.Slider(WIN,x,y,length,height,frame_color,buttom_color)
 
-        self.actual_drawing_width = slider.return_val()
+        self.sliders.append(slider)
+
+        return slider.return_val()
 
 
 
@@ -190,14 +206,14 @@ class Paint:
 
         self.run = True
         self.screen = Screen()
-        self.main_loop()
-
 
     def main_loop(self):
+        self.screen.generate_tools()
         while self.run:
             CLOCK.tick(Config.FPS)
             self.check_events()
             self.screen.draw_the_window()
+
 
 
     def check_events(self):
@@ -221,7 +237,8 @@ class Paint:
 
 
 def main():
-    Paint()
+    paint = Paint()
+    paint.main_loop()
 
 
 if __name__ == "__main__":
