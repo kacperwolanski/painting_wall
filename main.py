@@ -36,9 +36,11 @@ class Screen:
         self.samples = []
         self.color_choose = -1
         self.actual_drawing_width = 1
+        self.seksik=2
 
         # tool staff
         self.sliders = []
+
 
 
     def generate_tools(self):
@@ -56,7 +58,7 @@ class Screen:
 
         WIN.fill(Colors.WHITE)
         self.draw_the_drawing()
-        print(self.sliders)
+        print(self.seksik)
         self.draw_Color_palette()
         self.draw_the_sliders()
         self.draw_frames()
@@ -165,6 +167,8 @@ class Screen:
 
             if slider[1] == 'actual_drawing_width':
                 self.actual_drawing_width=slider[0].return_val()
+
+   
 
     def generate_sliders(self, WIN, x, y, length, height, frame_color, buttom_color,variable):
 
