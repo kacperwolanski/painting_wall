@@ -23,8 +23,6 @@ class Pixel:
         self.rect = pygame.Rect(x, y, self.length, self.height)
 
 
-
-
 class Screen:
     def __init__(self):
         self.draw_surface_length = Config.WINDOW_LENGTH * (Config.PIXEL_LENGTH - 1)
@@ -33,34 +31,32 @@ class Screen:
         self.tool_menu_height = self.draw_surface_height
         self.pixels = []
 
-
         # color staff
         self.actual_color = Colors.BLACK
         self.samples = []
         self.color_choose = -1
         self.actual_drawing_width = 1
 
-
         # tool staff
         self.sliders = []
-
-
 
 
     def generate_tools(self):
         self.generate_pixels()
 
         # generate width slider
-        self.actual_drawing_width = self.generate_sliders(WIN, self.draw_surface_length + self.tool_menu_length // 4,
+        self.generate_sliders(WIN, self.draw_surface_length + self.tool_menu_length // 4,
                                                           Config.PIXEL_LENGTH * 2,
                                                           self.tool_menu_length // 2, Config.PIXEL_LENGTH * 5,
-                                                          Colors.LIGHT_GRAY, self.actual_color)
+                                                          Colors.LIGHT_GRAY, self.actual_color,'actual_drawing_width')
+
 
 
     def draw_the_window(self):
 
         WIN.fill(Colors.WHITE)
         self.draw_the_drawing()
+        print(self.sliders)
         self.draw_Color_palette()
         self.draw_the_sliders()
         self.draw_frames()
@@ -92,13 +88,6 @@ class Screen:
 
         for i in self.pixels:
             pygame.draw.rect(WIN, i.color, i)
-
-    def draw_the_sliders(self):
-        for slider in self.sliders:
-            slider.draw_the_slider(Paint.drawing)
-
-
-
 
 
 
@@ -164,14 +153,36 @@ class Screen:
             if self.color_choose != -1:
                 pygame.draw.rect(WIN, Colors.BLACK, self.samples[self.color_choose][0], 4)
 
-    def generate_sliders(self,WIN,x,y,length,height,frame_color,buttom_color):
+
+
+
+
+    def draw_the_sliders(self):
+
+        for slider in self.sliders:
+            slider[0].draw_the_slider(Paint.drawing)
+
+
+            if slider[1] == 'actual_drawing_width':
+                self.actual_drawing_width=slider[0].return_val()
+
+    def generate_sliders(self, WIN, x, y, length, height, frame_color, buttom_color,variable):
 
         # generate slider
-        slider = Slider.Slider(WIN,x,y,length,height,frame_color,buttom_color)
+        slider = Slider.Slider(WIN, x, y, length, height, frame_color, buttom_color)
 
-        self.sliders.append(slider)
+        self.sliders.append([slider,variable])
 
-        return slider.return_val()
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -202,6 +213,7 @@ class Screen:
 
 class Paint:
     drawing = False
+
     def __init__(self):
 
         self.run = True
@@ -213,8 +225,6 @@ class Paint:
             CLOCK.tick(Config.FPS)
             self.check_events()
             self.screen.draw_the_window()
-
-
 
     def check_events(self):
         for event in pygame.event.get():
