@@ -1,7 +1,5 @@
-import main
 import pygame
 import Config
-import Colors
 
 
 class Slider:
