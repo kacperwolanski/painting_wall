@@ -4,12 +4,13 @@ import Colors
 import main
 import Pixel
 import Slider
-
+import Buttom
 
 WIN = main.WIN
 Paint = main.Paint
 
 font = main.font
+
 
 class Screen:
     def __init__(self):
@@ -28,8 +29,9 @@ class Screen:
 
         # tool staff
         self.sliders = []
+        self.buttoms = []
 
-    def check_if_mouse_is_down(self,drawing):
+    def check_if_mouse_is_down(self, drawing):
         self.mouse_down = drawing
 
     def generate_tools(self):
@@ -41,6 +43,12 @@ class Screen:
                               self.tool_menu_length // 2, Config.PIXEL_LENGTH * 5,
                               Colors.LIGHT_GRAY, self.actual_color, 'actual_drawing_width')
 
+        # generate draw reseting buttom
+        self.generate_buttoms(WIN, Config.SCREEN_LENGTH - 10 * Config.PIXEL_LENGTH, self.tool_menu_height,
+                              10 * Config.PIXEL_LENGTH, 5 * Config.PIXEL_LENGTH, "Reset", Colors.BLACK, Colors.RED,
+                              Colors.AQUA)
+
+    # drawing staff
     def draw_the_window(self):
 
         WIN.fill(Colors.WHITE)
@@ -48,6 +56,7 @@ class Screen:
 
         self.draw_color_palette()
         self.draw_the_sliders()
+        self.draw_the_buttom()
         self.draw_frames()
         self.blit_text()
         pygame.display.update()
@@ -74,6 +83,9 @@ class Screen:
                         for w_y in range(self.actual_drawing_width):
                             if pixel + w_x * Config.WINDOW_HEIGHT + w_y < len(self.pixels):
                                 self.pixels[pixel + w_x * Config.WINDOW_HEIGHT + w_y].color = self.actual_color
+
+                                if pygame.mouse.get_pos()[1] + self.actual_drawing_width > self.draw_surface_height:
+                                    print("w")
 
         for i in self.pixels:
             pygame.draw.rect(WIN, i.color, i)
@@ -140,6 +152,7 @@ class Screen:
             if self.color_choose != -1:
                 pygame.draw.rect(WIN, Colors.BLACK, self.samples[self.color_choose][0], 4)
 
+    # slider staff
     def draw_the_sliders(self):
 
         for slider in self.sliders:
@@ -155,6 +168,16 @@ class Screen:
 
         self.sliders.append([slider, variable])
 
+    # buttom staff
+    def generate_buttoms(self, WIN, x, y, length, height, text, text_front_color, text_backing_color, actovate_color):
+        buttom = Buttom.Buttom(WIN, x, y, length, height, text, text_front_color, text_backing_color, actovate_color)
+        self.buttoms.append(buttom)
+
+    def draw_the_buttom(self):
+        for buttom in self.buttoms:
+            buttom.draw_the_buttom()
+
+    # text staff
     def text_rendering(self, text, front_color, back_color, textRect_center):
         text = font.render(text, True, front_color, back_color)
         textRect = text.get_rect()
@@ -176,4 +199,3 @@ class Screen:
         self.text_rendering('W: ' + str(self.actual_drawing_width), color, self.actual_color, (
             self.draw_surface_length + self.tool_menu_length * 3 // 4 + self.tool_menu_length // 16,
             Config.PIXEL_LENGTH * 3))
-

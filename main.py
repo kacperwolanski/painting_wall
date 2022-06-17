@@ -1,7 +1,7 @@
 import pygame
 import Config
 import Screen
-
+import Buttom
 WIN = pygame.display.set_mode((Config.SCREEN_LENGTH, Config.SCREEN_HEIGHT))
 CLOCK = pygame.time.Clock()
 pygame.display.set_caption('Painting wall')
