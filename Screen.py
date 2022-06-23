@@ -20,7 +20,7 @@ class Screen:
         self.tool_menu_length = Config.SCREEN_LENGTH - self.draw_surface_length
         self.tool_menu_height = self.draw_surface_height
         self.pixels = []
-        self.mouse_down = False
+
         # color staff
         self.actual_color = Colors.BLACK
         self.samples = []
@@ -30,9 +30,6 @@ class Screen:
         # tool staff
         self.sliders = []
         self.buttoms = []
-
-    def check_if_mouse_is_down(self, drawing):
-        self.mouse_down = drawing
 
     def generate_tools(self):
         self.generate_pixels()
@@ -53,7 +50,6 @@ class Screen:
 
         WIN.fill(Colors.WHITE)
         self.draw_the_drawing()
-
         self.draw_color_palette()
         self.draw_the_sliders()
         self.draw_the_buttom()
@@ -76,7 +72,7 @@ class Screen:
 
     def draw_the_drawing(self):
 
-        if self.mouse_down:
+        if pygame.mouse.get_pressed()[0]:
             for pixel in range(len(self.pixels)):
                 if self.pixels[pixel].rect.collidepoint(pygame.mouse.get_pos()):
                     for w_x in range(self.actual_drawing_width):
@@ -156,7 +152,7 @@ class Screen:
     def draw_the_sliders(self):
 
         for slider in self.sliders:
-            slider[0].draw_the_slider(self.mouse_down)
+            slider[0].draw_the_slider()
 
             if slider[1] == 'actual_drawing_width':
                 self.actual_drawing_width = slider[0].return_val()
@@ -169,26 +165,22 @@ class Screen:
         self.sliders.append([slider, variable])
 
     # buttom staff
-    def generate_buttoms(self, WIN, x, y, length, height, text, text_front_color, text_backing_color, actovate_color):
-        buttom = Buttom.Buttom(WIN, x, y, length, height, text, text_front_color, text_backing_color, actovate_color)
+    def generate_buttoms(self, WIN, x, y, length, height, text, text_front_color, text_backing_color, activate_color):
+        buttom = Buttom.Buttom(WIN, x, y, length, height, text, text_front_color, text_backing_color, activate_color)
         self.buttoms.append(buttom)
 
     def draw_the_buttom(self):
         for buttom in self.buttoms:
             buttom.draw_the_buttom()
 
+
     # text staff
-    def text_rendering(self, text, front_color, back_color, textRect_center):
-        text = font.render(text, True, front_color, back_color)
-        textRect = text.get_rect()
-        textRect.center = textRect_center
-        WIN.blit(text, textRect)
 
     def blit_text(self):
         # width adjusting
         # text "Adjust drawing width" render staff
-        self.text_rendering('Adjust drawing width', Colors.BLACK, Colors.LIGHT_GRAY,
-                            (self.draw_surface_length + self.tool_menu_length // 2, Config.PIXEL_LENGTH))
+        text_rendering('Adjust drawing width', Colors.BLACK, Colors.LIGHT_GRAY,
+                       (self.draw_surface_length + self.tool_menu_length // 2, Config.PIXEL_LENGTH))
 
         # blit actual width info
         if self.actual_color == Colors.BLACK:
@@ -196,6 +188,13 @@ class Screen:
         else:
             color = Colors.BLACK
 
-        self.text_rendering('W: ' + str(self.actual_drawing_width), color, self.actual_color, (
+        text_rendering('W: ' + str(self.actual_drawing_width), color, self.actual_color, (
             self.draw_surface_length + self.tool_menu_length * 3 // 4 + self.tool_menu_length // 16,
             Config.PIXEL_LENGTH * 3))
+
+
+def text_rendering(text, front_color, back_color, textRect_center):
+    text = font.render(text, True, front_color, back_color)
+    textRect = text.get_rect()
+    textRect.center = textRect_center
+    WIN.blit(text, textRect)

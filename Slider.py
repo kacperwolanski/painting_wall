@@ -15,17 +15,14 @@ class Slider:
         self.buttom_x = self.x
         self.scalling = 1
 
-
-
-    def draw_the_slider(self,mousedown):
-
+    def draw_the_slider(self):
 
         # draw the frame
         pygame.draw.rect(self.WIN, self.frame_color,
                          pygame.Rect(self.x, self.y, self.length, self.height), Config.PIXEL_LENGTH)
 
         if self.rect.collidepoint(pygame.mouse.get_pos()):
-            if mousedown:
+            if pygame.mouse.get_pressed()[0]:
                 if pygame.mouse.get_pos()[0] > self.x:
                     self.buttom_x = pygame.mouse.get_pos()[0]
                     if pygame.mouse.get_pos()[0] + 3 * Config.PIXEL_LENGTH > self.x + self.length:
@@ -36,7 +33,6 @@ class Slider:
         # draw the buttom
         pygame.draw.rect(self.WIN, self.buttom_color,
                          pygame.Rect(self.buttom_x, self.y, Config.PIXEL_LENGTH * 2, self.height))
-
 
     def return_val(self):
         return self.scalling
