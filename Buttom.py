@@ -20,7 +20,7 @@ class Buttom:
         self.rect = pygame.Rect(self.x, self.y, self.length, self.height)
 
     def draw_the_buttom(self):
-
+        self.active_buttom = False
         color = self.buttom_press()
 
         pygame.draw.rect(self.WIN, color,
