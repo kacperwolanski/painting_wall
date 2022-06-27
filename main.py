@@ -18,7 +18,7 @@ class Paint:
         self.screen = Screen.Screen()
 
     def main_loop(self):
-        self.screen.generate_tools()
+
         while self.run:
             CLOCK.tick(Config.FPS)
             self.check_events()

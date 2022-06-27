@@ -32,14 +32,19 @@ class Screen:
         # tool staff
         self.sliders = []
         self.buttoms = []
-        self.shapes= ['Rectangle','Circle','Ellipse','Line','Square','Triangle']
+        self.append_tools = True
+
+        #shapes staff
+        self.x_amount_of_shapes = 3
+        self.shapes = ['Rectangle', 'Circle', 'Ellipse', 'Line', 'Square', 'Triangle']
         self.shapes_coordinates = []
 
-
     def generate_tools(self):
-        self.generate_pixels()
-        self.generate_sliders()
-        self.generate_buttoms()
+        if self.append_tools:
+            self.generate_pixels()
+            self.generate_sliders()
+            self.generate_buttoms()
+            self.append_tools = False
 
     # drawing staff
     def draw_the_window(self):
@@ -47,9 +52,11 @@ class Screen:
         WIN.fill(Colors.WHITE)
         self.draw_the_drawing()
         self.draw_color_palette()
-        self.realize_the_tools()
         self.draw_frames()
+        self.realize_the_tools()
+        self.generate_tools()
         self.blit_text()
+
         pygame.display.update()
 
     def generate_pixels(self):
@@ -111,31 +118,34 @@ class Screen:
                                      self.palette_height),
                          Config.PIXEL_LENGTH)
 
+        # drawing shape choosing
+        x_offset = self.draw_surface_length
+        y_offset = self.palette_height * 2
+
         # draw shapes frame
         pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
                          pygame.Rect(
                              self.draw_surface_length, self.palette_height * 2, self.tool_menu_length,
-                                                       self.tool_menu_height // 3), Config.PIXEL_LENGTH)
+                                                       self.tool_menu_height // 3+Config.PIXEL_LENGTH), Config.PIXEL_LENGTH)
 
         # draw shapes grid
-        x_offset = self.draw_surface_length
-        y_offset = self.palette_height * 2
-        for x in range(3):
-            for y in range(len(self.shapes)//3):
+        for x in range(self.x_amount_of_shapes):
+            for y in range(len(self.shapes) // self.x_amount_of_shapes):
                 pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
                                  pygame.Rect(
-                                     x_offset, y_offset, self.tool_menu_length // 3, self.tool_menu_height // 6),
+                                     x_offset, y_offset, self.tool_menu_length // self.x_amount_of_shapes,
+                                                         self.tool_menu_height // (2 * self.x_amount_of_shapes)),
                                  Config.PIXEL_LENGTH)
 
-                if len(self.shapes_coordinates)<6:
-                    self.shapes_coordinates.append([x_offset,y_offset])
+                if len(self.shapes_coordinates) < len(self.shapes):
+                    self.shapes_coordinates.append([x_offset, y_offset])
 
-                y_offset += self.tool_menu_height // 6
+
+                y_offset += self.tool_menu_height // (2 * self.x_amount_of_shapes)
             y_offset = self.palette_height * 2
-            x_offset += self.tool_menu_length // 3
+            x_offset += self.tool_menu_length // self.x_amount_of_shapes
 
         # draw shapes frames
-
 
     def draw_color_palette(self):
         # draw color samples
@@ -199,14 +209,56 @@ class Screen:
         self.sliders.append([width_slider, 'actual_drawing_width'])
 
     def generate_buttoms(self):
+
+
         # generate draw reseting buttom
+
+        reset_buttom_height = 5 * Config.PIXEL_LENGTH
+        reset_buttom_lenght = 10 * Config.PIXEL_LENGTH
+
         reset_buttom = Buttom.Buttom(WIN, Config.SCREEN_LENGTH - 10 * Config.PIXEL_LENGTH, self.tool_menu_height,
-                                     10 * Config.PIXEL_LENGTH, 5 * Config.PIXEL_LENGTH, "Reset", Colors.BLACK,
+                                     reset_buttom_lenght,reset_buttom_height, "Reset", Colors.BLACK,
                                      Colors.RED,
                                      Colors.AQUA)
         self.buttoms.append([reset_buttom, "Reset"])
 
+        #generate save draw buttom
+
+        save_draw_buttom = Buttom.Buttom(WIN, Config.SCREEN_LENGTH - 10 * Config.PIXEL_LENGTH, self.tool_menu_height+reset_buttom_height+Config.PIXEL_LENGTH,
+                                     reset_buttom_lenght, reset_buttom_height, "Save", Colors.BLACK,
+                                     Colors.GREEN_1,
+                                     Colors.BLUE_0)
+
+        self.buttoms.append([save_draw_buttom,"Save_draw"])
+
+        # generate open draw buttom
+
+        open_draw_buttom = Buttom.Buttom(WIN, Config.SCREEN_LENGTH - 10 * Config.PIXEL_LENGTH,
+                                         self.tool_menu_height + 2*(reset_buttom_height+Config.PIXEL_LENGTH),
+                                         reset_buttom_lenght, reset_buttom_height, "Open", Colors.BLACK,
+                                         Colors.ORANGE,
+                                         Colors.GRAY)
+
+        self.buttoms.append([open_draw_buttom, "Open_draw"])
+
+
+
+
+
+
         # generate shapes buttoms
+        for i in range(len(self.shapes)):
+
+            name_of_shape = self.shapes[i]
+            shape_buttom = Buttom.Buttom(WIN, self.shapes_coordinates[i][0]+Config.PIXEL_LENGTH,self.shapes_coordinates[i][1]+Config.PIXEL_LENGTH,
+                                     self.tool_menu_length // self.x_amount_of_shapes - Config.PIXEL_LENGTH, self.tool_menu_height // (2 * self.x_amount_of_shapes) -  Config.PIXEL_LENGTH, name_of_shape, Colors.BLACK,
+                                     Colors.WHITE,
+                                     Colors.AQUA)
+
+
+            self.buttoms.append([shape_buttom,name_of_shape])
+
+
 
     # text staff
 
