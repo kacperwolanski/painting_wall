@@ -31,15 +31,14 @@ class Buttom:
 
     def buttom_press(self):
 
-        color= self.text_backing_color
+        color = self.text_backing_color
         if self.rect.collidepoint(pygame.mouse.get_pos()):
-            pygame.draw.rect(self.WIN, Colors.BLACK,
-                             pygame.Rect(self.x + 2, self.y + 2, self.length, self.height), 2)
+            if not pygame.mouse.get_pressed()[0]:
+                pygame.draw.rect(self.WIN, Colors.BLACK,
+                                 pygame.Rect(self.x + 2, self.y + 2, self.length, self.height), 2)
 
-            if pygame.mouse.get_pressed()[0]:
+            else:
                 color = self.activate_color
                 self.active_buttom = True
-
-
 
         return color

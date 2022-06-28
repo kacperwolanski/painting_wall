@@ -302,20 +302,20 @@ class Screen:
         self.buttoms.append([add_image_buttom, "Add image"])
         # generate add text buttom
         add_text_buttom = Buttom.Buttom(WIN, self.draw_surface_length,
-                                         self.draw_surface_height + 3 * (function_buttom_height + Config.PIXEL_LENGTH),
-                                         2 * function_buttom_length, function_buttom_height, "Add text", Colors.BLACK,
-                                         Colors.LIGHT_GRAY,
-                                         Colors.AQUA)
+                                        self.draw_surface_height + 3 * (function_buttom_height + Config.PIXEL_LENGTH),
+                                        2 * function_buttom_length, function_buttom_height, "Add text", Colors.BLACK,
+                                        Colors.LIGHT_GRAY,
+                                        Colors.AQUA)
 
         self.buttoms.append([add_text_buttom, "Add text"])
 
         # generate rubber buttom
 
-        rubber_buttom = Buttom.Buttom(WIN, self.draw_surface_length+Config.PIXEL_LENGTH,
-                                        self.palette_height +6*Config.PIXEL_LENGTH,
-                                        2 * function_buttom_length, function_buttom_height, "Rubber", Colors.BLACK,
-                                        Colors.LIGHT_GRAY,
-                                        Colors.AQUA)
+        rubber_buttom = Buttom.Buttom(WIN, self.draw_surface_length + 2 * Config.PIXEL_LENGTH,
+                                      self.palette_height + 7 * Config.PIXEL_LENGTH,
+                                      2 * function_buttom_length, function_buttom_height, "Rubber", Colors.BLACK,
+                                      Colors.LIGHT_GRAY,
+                                      Colors.AQUA)
 
         self.buttoms.append([rubber_buttom, "Rubber"])
 
@@ -347,12 +347,3 @@ def text_rendering(text, front_color, back_color, textRect_center):
     textRect = text.get_rect()
     textRect.center = textRect_center
     WIN.blit(text, textRect)
-
-
-'''
-                    elif buttom[1] == 'Circle':
-                    elif buttom[1] == 'Ellipse':
-                    elif buttom[1] == 'Line':
-                    elif buttom[1] =='Square':
-                    elif buttom[1] == 'Triangle':
-'''
