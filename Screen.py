@@ -146,7 +146,6 @@ class Screen:
                 if len(self.shapes[list(self.shapes.keys())[shape_index]]) == 0:
                     self.shapes[list(self.shapes.keys())[shape_index]] = [x_offset, y_offset]
 
-      
                 shape_index += 1
 
                 y_offset += grid_height
@@ -232,11 +231,11 @@ class Screen:
 
         # generate draw reseting buttom
 
-        reset_buttom_height = 5 * Config.PIXEL_LENGTH
-        reset_buttom_lenght = 10 * Config.PIXEL_LENGTH
+        function_buttom_height = 5 * Config.PIXEL_LENGTH
+        function_buttom_length = 10 * Config.PIXEL_LENGTH
 
         reset_buttom = Buttom.Buttom(WIN, Config.SCREEN_LENGTH - 10 * Config.PIXEL_LENGTH, self.tool_menu_height,
-                                     reset_buttom_lenght, reset_buttom_height, "Reset", Colors.BLACK,
+                                     function_buttom_length, function_buttom_height, "Reset", Colors.BLACK,
                                      Colors.RED,
                                      Colors.AQUA)
         self.buttoms.append([reset_buttom, "Reset"])
@@ -244,9 +243,9 @@ class Screen:
         # generate save draw buttom
 
         save_draw_buttom = Buttom.Buttom(WIN, Config.SCREEN_LENGTH - 10 * Config.PIXEL_LENGTH,
-                                         self.tool_menu_height + reset_buttom_height + Config.PIXEL_LENGTH,
-                                         reset_buttom_lenght, reset_buttom_height, "Save", Colors.BLACK,
-                                         Colors.GREEN_1,
+                                         self.tool_menu_height + function_buttom_height + Config.PIXEL_LENGTH,
+                                         function_buttom_length, function_buttom_height, "Save", Colors.BLACK,
+                                         Colors.LIGHT_GRAY,
                                          Colors.AQUA)
 
         self.buttoms.append([save_draw_buttom, "Save_draw"])
@@ -254,9 +253,9 @@ class Screen:
         # generate open draw buttom
 
         open_draw_buttom = Buttom.Buttom(WIN, Config.SCREEN_LENGTH - 10 * Config.PIXEL_LENGTH,
-                                         self.tool_menu_height + 2 * (reset_buttom_height + Config.PIXEL_LENGTH),
-                                         reset_buttom_lenght, reset_buttom_height, "Open", Colors.BLACK,
-                                         Colors.ORANGE,
+                                         self.tool_menu_height + 2 * (function_buttom_height + Config.PIXEL_LENGTH),
+                                         function_buttom_length, function_buttom_height, "Open", Colors.BLACK,
+                                         Colors.LIGHT_GRAY,
                                          Colors.AQUA)
 
         self.buttoms.append([open_draw_buttom, "Open_draw"])
@@ -272,6 +271,53 @@ class Screen:
                                          Colors.AQUA)
 
             self.buttoms.append([shape_buttom, name_of_shape])
+
+        # generate fill the background buttom
+        fill_the_background_buttom = Buttom.Buttom(WIN, self.draw_surface_length,
+                                                   self.draw_surface_height,
+                                                   2 * function_buttom_length, function_buttom_height,
+                                                   "Fill background", Colors.BLACK,
+                                                   Colors.LIGHT_GRAY,
+                                                   Colors.AQUA)
+
+        self.buttoms.append([fill_the_background_buttom, "Fill background"])
+
+        # generate add color buttom
+        add_color_buttom = Buttom.Buttom(WIN, self.draw_surface_length,
+                                         self.draw_surface_height + function_buttom_height + Config.PIXEL_LENGTH,
+                                         2 * function_buttom_length, function_buttom_height, "Add color",
+                                         Colors.BLACK,
+                                         Colors.LIGHT_GRAY,
+                                         Colors.AQUA)
+
+        self.buttoms.append([add_color_buttom, "Add color"])
+
+        # generate add image buttom
+        add_image_buttom = Buttom.Buttom(WIN, self.draw_surface_length,
+                                         self.draw_surface_height + 2 * (function_buttom_height + Config.PIXEL_LENGTH),
+                                         2 * function_buttom_length, function_buttom_height, "Add image", Colors.BLACK,
+                                         Colors.LIGHT_GRAY,
+                                         Colors.AQUA)
+
+        self.buttoms.append([add_image_buttom, "Add image"])
+        # generate add text buttom
+        add_text_buttom = Buttom.Buttom(WIN, self.draw_surface_length,
+                                         self.draw_surface_height + 3 * (function_buttom_height + Config.PIXEL_LENGTH),
+                                         2 * function_buttom_length, function_buttom_height, "Add text", Colors.BLACK,
+                                         Colors.LIGHT_GRAY,
+                                         Colors.AQUA)
+
+        self.buttoms.append([add_text_buttom, "Add text"])
+
+        # generate rubber buttom
+
+        rubber_buttom = Buttom.Buttom(WIN, self.draw_surface_length+Config.PIXEL_LENGTH,
+                                        self.palette_height +6*Config.PIXEL_LENGTH,
+                                        2 * function_buttom_length, function_buttom_height, "Rubber", Colors.BLACK,
+                                        Colors.LIGHT_GRAY,
+                                        Colors.AQUA)
+
+        self.buttoms.append([rubber_buttom, "Rubber"])
 
     # text staff
 
