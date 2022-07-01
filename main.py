@@ -33,6 +33,7 @@ class Paint:
             for s in self.screen.samples:
                 if s[0].collidepoint(pygame.mouse.get_pos()):
                     self.screen.color_choose = self.screen.samples.index(s)
+                    self.screen.rubber = False
 
                     if pygame.mouse.get_pressed()[0]:
                         self.screen.actual_color = s[1]

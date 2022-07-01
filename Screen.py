@@ -1,9 +1,11 @@
 import pygame
 import Config
 import Colors
+import Option_Window
 import main
 import Pixel
 import Slider
+import math
 import Buttom
 
 WIN = main.WIN
@@ -32,7 +34,9 @@ class Screen:
         # tool staff
         self.sliders = []
         self.buttoms = []
+        self.info_windows = {}
         self.append_tools = True
+        self.rubber = False
 
         # shapes staff
         self.x_amount_of_shapes = 3
@@ -43,6 +47,7 @@ class Screen:
             self.generate_pixels()
             self.generate_sliders()
             self.generate_buttoms()
+            self.generate_info_windows()
             self.append_tools = False
 
     # drawing staff
@@ -52,7 +57,7 @@ class Screen:
         self.draw_the_drawing()
         self.draw_color_palette()
         self.draw_frames()
-
+        self.realize_info_windows()
         self.realize_the_tools()
         self.generate_tools()
         self.blit_text()
@@ -188,6 +193,16 @@ class Screen:
                 pygame.draw.rect(WIN, Colors.BLACK, self.samples[self.color_choose][0], 4)
 
     def realize_the_tools(self):
+
+        # rubber
+        if self.rubber:
+            # rubber cleaning
+
+            # rubber frame
+            pygame.draw.rect(WIN, Colors.BLACK, pygame.Rect(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1],
+                                                            3 * self.actual_drawing_width,
+                                                            3 * self.actual_drawing_width), 2)
+
         # sliders
         for slider in self.sliders:
             slider[0].draw_the_slider()
@@ -201,9 +216,17 @@ class Screen:
             if buttom[0].active_buttom:
                 # Reset buttom
                 if buttom[1] == "Reset":
-                    for pixel in self.pixels:
-                        pixel.color = Colors.WHITE
+                    Buttom.reset_buttom(self.pixels)
                 # save draw buttom
+
+                elif buttom[1] == "Rubber":
+
+                    if self.rubber:
+                        self.rubber = False
+                    else:
+                        self.rubber = True
+                        self.actual_color = Colors.WHITE
+
                 elif buttom[1] == "Save_draw":
                     pass
 
@@ -217,6 +240,15 @@ class Screen:
                 elif buttom[1] in self.shapes:
                     if buttom[1] == 'Rectangle':
                         pass
+
+
+                elif buttom[1] == "Add color":
+                    self.activate_window("Add color")
+
+    def activate_window(self, name):
+        for key in list(self.info_windows.keys()):
+            if self.info_windows[key][1] == name:
+                self.info_windows[key][0] = True
 
     def generate_sliders(self):
         # generate width slider
@@ -318,6 +350,20 @@ class Screen:
                                       Colors.AQUA)
 
         self.buttoms.append([rubber_buttom, "Rubber"])
+
+    def realize_info_windows(self):
+        for key in list(self.info_windows.keys()):
+            if self.info_windows[key][0] == True:
+                key.pop_window()
+
+    def generate_info_windows(self):
+        # add color window
+        add_color_window = Option_Window.Window(0, self.draw_surface_height, 400, 200, "Add color", 5)
+        # add color window buttoms
+
+        add_color_window.generate_buttoms(self.tool_menu_height,"HUJ", Colors.BLACK, Colors.LIGHT_GRAY, Colors.AQUA)
+
+        self.info_windows.update({add_color_window: [False, "Add color"]})
 
     # text staff
 
