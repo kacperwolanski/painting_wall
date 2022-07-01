@@ -49,3 +49,9 @@ def reset_buttom(pixels):
     for pixel in pixels:
         pixel.color = Colors.WHITE
 
+def adding_color_buttom():
+
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_0:
+

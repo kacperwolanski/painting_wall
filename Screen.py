@@ -62,6 +62,7 @@ class Screen:
         self.generate_tools()
         self.blit_text()
 
+
         pygame.display.update()
 
     def generate_pixels(self):
@@ -245,19 +246,10 @@ class Screen:
                 elif buttom[1] == "Add color":
                     self.activate_window("Add color")
 
-    def activate_window(self, name):
-        for key in list(self.info_windows.keys()):
-            if self.info_windows[key][1] == name:
-                self.info_windows[key][0] = True
 
-    def generate_sliders(self):
-        # generate width slider
-        width_slider = Slider.Slider(WIN, self.draw_surface_length + self.tool_menu_length // 4,
-                                     Config.PIXEL_LENGTH * 2,
-                                     self.tool_menu_length // 2, Config.PIXEL_LENGTH * 5,
-                                     Colors.LIGHT_GRAY, self.actual_color)
 
-        self.sliders.append([width_slider, 'actual_drawing_width'])
+
+
 
     def generate_buttoms(self):
 
@@ -351,22 +343,41 @@ class Screen:
 
         self.buttoms.append([rubber_buttom, "Rubber"])
 
-    def realize_info_windows(self):
+
+
+    def activate_window(self, name):
         for key in list(self.info_windows.keys()):
-            if self.info_windows[key][0] == True:
+            if self.info_windows[key][1] == name:
+                self.info_windows[key][0] = True
+    def realize_info_windows(self):
+        for key in self.info_windows.keys():
+            if self.info_windows[key][0]:
                 key.pop_window()
+                self.info_windows[key][0] = key.is_active
 
     def generate_info_windows(self):
         # add color window
-        add_color_window = Option_Window.Window(0, self.draw_surface_height, 400, 200, "Add color", 5)
+        add_color_window = Option_Window.Window(0, self.draw_surface_height+Config.PIXEL_HEIGHT, 400, 200, "Add color by writing RGB values", 5)
         # add color window buttoms
 
-        add_color_window.generate_buttoms(self.tool_menu_height,"HUJ", Colors.BLACK, Colors.LIGHT_GRAY, Colors.AQUA)
+        add_color_window.generate_buttoms(self.tool_menu_height,"ADD", Colors.BLACK, Colors.GRAY, Colors.AQUA,"Add color")
+        add_color_window.generate_buttoms(self.tool_menu_height, "CLEAR", Colors.BLACK, Colors.GRAY, Colors.AQUA,"Clear values")
 
+        add_color_window.generate_buttoms(self.tool_menu_height, "3 seperated values...", Colors.GRAY, Colors.WHITE, Colors.AQUA,
+                                          "Write color")
         self.info_windows.update({add_color_window: [False, "Add color"]})
 
-    # text staff
 
+    def generate_sliders(self):
+        # generate width slider
+        width_slider = Slider.Slider(WIN, self.draw_surface_length + self.tool_menu_length // 4,
+                                     Config.PIXEL_LENGTH * 2,
+                                     self.tool_menu_length // 2, Config.PIXEL_LENGTH * 5,
+                                     Colors.LIGHT_GRAY, self.actual_color)
+
+        self.sliders.append([width_slider, 'actual_drawing_width'])
+
+    # text staff
     def blit_text(self):
         # width adjusting
         # text "Adjust drawing width" render staff
