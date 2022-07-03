@@ -20,6 +20,7 @@ class Buttom:
         self.rect = pygame.Rect(self.x, self.y, self.length, self.height)
 
 
+
     def draw_the_buttom(self):
         self.active_buttom = False
         color = self.buttom_press()
@@ -44,14 +45,9 @@ class Buttom:
 
         return color
 
-# draw reset buttom
-def reset_buttom(pixels):
+# reset buttom
+def reset_buttom(pixels,color):
     for pixel in pixels:
-        pixel.color = Colors.WHITE
+        pixel.color = color
 
-def adding_color_buttom():
-
-    for event in pygame.event.get():
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_0:
 

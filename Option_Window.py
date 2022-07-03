@@ -22,16 +22,22 @@ class Window:
         self.buttom_height = 5 * Config.PIXEL_LENGTH
         self.buttoms = []
         self.is_active = False
+        self.refuse = False
+        self.allow = False
+
         self.buttom_x_offset = 0
-        self.close_the_window_image = Images.closing_window_buttom
+        self.keyboard_input = ""
+
+        self.color_adding = False
         self.add_closing_buttom()
 
     def add_closing_buttom(self):
         closing_buttom_size = 5 * Config.PIXEL_LENGTH
-        closing_buttom = Buttom.Buttom(WIN, self.x + self.length-closing_buttom_size, self.y, closing_buttom_size, closing_buttom_size, "X",
+        closing_buttom = Buttom.Buttom(WIN, self.x + self.length - closing_buttom_size, self.y, closing_buttom_size,
+                                       closing_buttom_size, "X",
                                        Colors.WHITE, Colors.RED, Colors.AQUA)
 
-        self.buttoms.append([closing_buttom,"X"])
+        self.buttoms.append([closing_buttom, "X"])
 
     def pop_window(self):
         self.is_active = True
@@ -45,28 +51,45 @@ class Window:
                               (self.x + self.length / 2, self.y + self.height / 4))
 
         for buttom in self.buttoms:
+
             buttom[0].draw_the_buttom()
-            #close buttom
+            # close buttom
             if buttom[0].active_buttom:
-                if buttom[1]=="X":
+                if buttom[1] == "X":
                     self.is_active = False
+                    self.color_adding = False
 
-                elif buttom[1]=="Write color":
-                    text=buttom[0].text
-                    buttom[0].text="|..."
+                elif buttom[1] == "Write color":
+                    text = buttom[0].text
+
+                    buttom[0].text = "|..."
+                    self.color_adding = True
+
+                elif buttom[1] == "Yes":
+                    self.allow = True
+
+                elif buttom[1]=="No":
+                    self.refuse = True
+
+        self.realize_tolls()
 
 
-    def generate_buttoms(self, y, text, text_front_color, text_backing_color, activate_color,buttom_name):
-        if len(text)<10:
+    def realize_tolls(self):
+        if self.color_adding:
+            pass
+
+
+
+
+
+
+    def generate_buttoms(self, y, text, text_front_color, text_backing_color, activate_color, buttom_name):
+        if len(text) < 10:
             self.buttom_length = len(text) * 3 * Config.PIXEL_LENGTH
         else:
-            self.buttom_length = len(text) *1.5* Config.PIXEL_LENGTH
+            self.buttom_length = len(text) * 1.5 * Config.PIXEL_LENGTH
         buttom = Buttom.Buttom(WIN, self.length // self.buttoms_amount + self.buttom_x_offset, y + self.height // 2,
                                self.buttom_length, self.buttom_height, text, text_front_color, text_backing_color,
                                activate_color)
-        self.buttoms.append([buttom,buttom_name])
+        self.buttoms.append([buttom, buttom_name])
         self.buttom_x_offset += 3 * self.buttom_length // 2
-
-    def close_the_window(self):
-        return 0
-

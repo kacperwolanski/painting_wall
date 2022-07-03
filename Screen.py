@@ -23,6 +23,7 @@ class Screen:
         self.tool_menu_height = self.draw_surface_height
         self.palette_height = self.tool_menu_height // 10
         self.palettle_length = self.tool_menu_length
+        self.keyboard_input = ""
         self.pixels = []
 
         # color staff
@@ -52,8 +53,8 @@ class Screen:
 
     # drawing staff
     def draw_the_window(self):
-
         WIN.fill(Colors.WHITE)
+        # print(self.info_windows)
         self.draw_the_drawing()
         self.draw_color_palette()
         self.draw_frames()
@@ -61,7 +62,6 @@ class Screen:
         self.realize_the_tools()
         self.generate_tools()
         self.blit_text()
-
 
         pygame.display.update()
 
@@ -217,7 +217,7 @@ class Screen:
             if buttom[0].active_buttom:
                 # Reset buttom
                 if buttom[1] == "Reset":
-                    Buttom.reset_buttom(self.pixels)
+                    Buttom.reset_buttom(self.pixels,Colors.WHITE)
                 # save draw buttom
 
                 elif buttom[1] == "Rubber":
@@ -246,10 +246,18 @@ class Screen:
                 elif buttom[1] == "Add color":
                     self.activate_window("Add color")
 
+                elif buttom[1] == "Fill background":
 
+                    self.activate_window("Fill background")
 
+                elif buttom[1] == "Add image":
+                    self.activate_window("Add image")
 
+                elif buttom[1] == "Add text":
+                    self.activate_window("Add text")
 
+                elif buttom[1] == "More options":
+                    self.activate_window("More options")
 
     def generate_buttoms(self):
 
@@ -343,30 +351,99 @@ class Screen:
 
         self.buttoms.append([rubber_buttom, "Rubber"])
 
+        # generate more options buttom
+        more_options_buttom = Buttom.Buttom(WIN, self.draw_surface_length,
+                                            self.draw_surface_height + 4 * (
+                                                    function_buttom_height + Config.PIXEL_LENGTH),
+                                            2 * function_buttom_length, function_buttom_height, "More options",
+                                            Colors.BLACK,
+                                            Colors.LIGHT_GRAY,
+                                            Colors.AQUA)
 
+        self.buttoms.append([more_options_buttom, "More options"])
 
     def activate_window(self, name):
         for key in list(self.info_windows.keys()):
             if self.info_windows[key][1] == name:
                 self.info_windows[key][0] = True
+
     def realize_info_windows(self):
         for key in self.info_windows.keys():
             if self.info_windows[key][0]:
                 key.pop_window()
                 self.info_windows[key][0] = key.is_active
+                # show window fill color probe
+                if self.info_windows[key][1] == "Fill background":
+                    pygame.draw.rect(WIN, self.actual_color,
+                                     pygame.Rect(key.x + 50 + key.length / 2, key.y + key.height / 5, 15, 15))
+
+                    if key.allow:
+                        Buttom.reset_buttom(self.pixels,self.actual_color)
+
 
     def generate_info_windows(self):
         # add color window
-        add_color_window = Option_Window.Window(0, self.draw_surface_height+Config.PIXEL_HEIGHT, 400, 200, "Add color by writing RGB values", 5)
+        add_color_window = Option_Window.Window(0, self.draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
+                                                "Add color by writing RGB values", 5)
         # add color window buttoms
 
-        add_color_window.generate_buttoms(self.tool_menu_height,"ADD", Colors.BLACK, Colors.GRAY, Colors.AQUA,"Add color")
-        add_color_window.generate_buttoms(self.tool_menu_height, "CLEAR", Colors.BLACK, Colors.GRAY, Colors.AQUA,"Clear values")
+        add_color_window.generate_buttoms(self.tool_menu_height, "ADD", Colors.BLACK, Colors.GRAY, Colors.AQUA,
+                                          "Add color")
+        add_color_window.generate_buttoms(self.tool_menu_height, "CLEAR", Colors.BLACK, Colors.GRAY, Colors.AQUA,
+                                          "Clear values")
 
-        add_color_window.generate_buttoms(self.tool_menu_height, "3 seperated values...", Colors.GRAY, Colors.WHITE, Colors.AQUA,
+        add_color_window.generate_buttoms(self.tool_menu_height, "3 seperated values...", Colors.GRAY, Colors.WHITE,
+                                          Colors.AQUA,
                                           "Write color")
         self.info_windows.update({add_color_window: [False, "Add color"]})
 
+        # fill background window
+        fill_background_window = Option_Window.Window(0, self.draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
+                                                      "Fill the background with       ?", 5)
+
+        # fill background window buttoms
+        fill_background_window.generate_buttoms(self.tool_menu_height, "Yes", Colors.BLACK, Colors.GRAY, Colors.AQUA,
+                                                "Yes")
+        fill_background_window.generate_buttoms(self.tool_menu_height, "No", Colors.BLACK, Colors.GRAY, Colors.AQUA,
+                                                "No")
+
+        self.info_windows.update({fill_background_window: [False, "Fill background"]})
+
+        # add image window
+        add_image_window = Option_Window.Window(0, self.draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
+                                                "Add the image", 5)
+
+        # add image window buttoms
+        add_image_window.generate_buttoms(self.tool_menu_height, "Browse...", Colors.BLACK, Colors.GRAY, Colors.AQUA,
+                                          "Browse")
+
+        self.info_windows.update({add_image_window: [False, "Add image"]})
+
+        # add text window
+        add_text_window = Option_Window.Window(0, self.draw_surface_height + Config.PIXEL_HEIGHT, 500, 200,
+                                               "Choose font type, font size, text color and then click where you want to add text",
+                                               5)
+
+        # add text window buttoms
+        add_text_window.generate_buttoms(self.tool_menu_height, "Choose font type", Colors.BLACK, Colors.GRAY,
+                                         Colors.AQUA,
+                                         "Choose font type")
+
+        add_text_window.generate_buttoms(self.tool_menu_height, "Choose font size", Colors.BLACK, Colors.GRAY,
+                                         Colors.AQUA,
+                                         "Choose font size")
+
+        add_text_window.generate_buttoms(self.tool_menu_height, "Choose text color", Colors.BLACK, Colors.GRAY,
+                                         Colors.AQUA,
+                                         "Choose text color")
+
+        self.info_windows.update({add_text_window: [False, "Add text"]})
+
+        # more options window
+        more_options_window = Option_Window.Window(0, self.draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
+                                                   "More options", 5)
+
+        self.info_windows.update({more_options_window: [False, "More options"]})
 
     def generate_sliders(self):
         # generate width slider
