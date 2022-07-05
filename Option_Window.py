@@ -40,7 +40,7 @@ class Window:
         self.buttoms.append([closing_buttom, "X"])
 
     def pop_window(self):
-        self.is_active = True
+        #self.is_active = True
         # window surface
         pygame.draw.rect(WIN, Colors.LIGHT_GRAY, pygame.Rect(self.x, self.y, self.length, self.height))
         # poping 3d experience frame
@@ -68,8 +68,12 @@ class Window:
                 elif buttom[1] == "Yes":
                     self.allow = True
 
-                elif buttom[1]=="No":
+                elif buttom[1] == "Cancel":
                     self.refuse = True
+
+                elif buttom[1] == "Add":
+                    self.allow = True
+
 
         self.realize_tolls()
 
@@ -88,8 +92,8 @@ class Window:
             self.buttom_length = len(text) * 3 * Config.PIXEL_LENGTH
         else:
             self.buttom_length = len(text) * 1.5 * Config.PIXEL_LENGTH
-        buttom = Buttom.Buttom(WIN, self.length // self.buttoms_amount + self.buttom_x_offset, y + self.height // 2,
+        buttom = Buttom.Buttom(WIN, 10* Config.PIXEL_LENGTH +self.buttom_x_offset, y + self.height // 2,
                                self.buttom_length, self.buttom_height, text, text_front_color, text_backing_color,
                                activate_color)
         self.buttoms.append([buttom, buttom_name])
-        self.buttom_x_offset += 3 * self.buttom_length // 2
+        self.buttom_x_offset += self.buttom_length + (self.length-20* Config.PIXEL_LENGTH)//(self.buttoms_amount*2)
