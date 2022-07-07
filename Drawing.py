@@ -7,6 +7,7 @@ import main
 WIN = main.WIN
 palette_height = 1
 
+
 def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool_menu_height, actual_color,
                 x_amount_of_shapes, shapes):
     # draw surface
@@ -71,11 +72,8 @@ def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool
         x_offset += grid_length
 
 
-
-
-def draw_color_palette(tool_menu_length,tool_menu_height,draw_surface_length,color_choose,samples,palette_height):
+def draw_color_palette(tool_menu_length, tool_menu_height, draw_surface_length, color_choose, samples, palette_height):
     # draw color samples
-
 
     sample_length = (tool_menu_height // 10 - Config.PIXEL_LENGTH) // 3
 
@@ -83,12 +81,9 @@ def draw_color_palette(tool_menu_length,tool_menu_height,draw_surface_length,col
     y_pos = Config.PIXEL_LENGTH * 7
     index = 0
 
+    if len(Colors.COLORS) / (tool_menu_length // sample_length) > palette_height:
+        palette_height += 1
 
-
-    if len(Colors.COLORS)/(tool_menu_length // sample_length)>palette_height:
-        palette_height +=1
-
-    print(palette_height,tool_menu_length // sample_length,len(samples),len(Colors.COLORS))
     for i in range(palette_height):
         for j in range(tool_menu_length // sample_length):
 
@@ -99,8 +94,8 @@ def draw_color_palette(tool_menu_length,tool_menu_height,draw_surface_length,col
             else:
                 color = Colors.WHITE
 
-            if len(samples) < len(Colors.COLORS) * palette_height:
-                samples.append([sample, color])
+
+            samples.append([sample, color])
 
             pygame.draw.rect(WIN, color, sample)
 
@@ -112,11 +107,10 @@ def draw_color_palette(tool_menu_length,tool_menu_height,draw_surface_length,col
         y_pos += sample_length
         x_pos = draw_surface_length + Config.PIXEL_LENGTH
 
-
         # color choosing
+        ''' 
         if color_choose != -1:
-
             pygame.draw.rect(WIN, Colors.BLACK, samples[color_choose][0], 4)
-
-
+        '''
     return samples
+

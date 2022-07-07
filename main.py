@@ -5,7 +5,6 @@ import Screen
 import Buttom
 
 WIN = pygame.display.set_mode((Config.SCREEN_LENGTH, Config.SCREEN_HEIGHT))
-print(Config.SCREEN_LENGTH,Config.SCREEN_HEIGHT)
 CLOCK = pygame.time.Clock()
 pygame.display.set_caption('Painting wall')
 
@@ -18,7 +17,7 @@ class Paint:
     def __init__(self):
         self.run = True
         self.screen = Screen.Screen()
-        self.keyboard_input = ""
+
 
 
 
@@ -27,9 +26,10 @@ class Paint:
 
         while self.run:
 
+
             CLOCK.tick(Config.FPS)
             self.check_events()
-            self.screen.keyboard_input=self.keyboard_input
+
             self.screen.draw_the_window()
 
     def check_events(self):
@@ -48,25 +48,25 @@ class Paint:
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_0:
-                    self.keyboard_input = 0
+                    self.screen.keyboard_input += "0"
                 elif event.key == pygame.K_1:
-                    self.keyboard_input = 1
+                    self.screen.keyboard_input += "1"
                 elif event.key == pygame.K_2:
-                    self.keyboard_input = 2
+                    self.screen.keyboard_input += "2"
                 elif event.key == pygame.K_3:
-                    self.keyboard_input = 3
+                    self.screen.keyboard_input += "3"
                 elif event.key == pygame.K_4:
-                    self.keyboard_input = 4
+                    self.screen.keyboard_input += "4"
                 elif event.key == pygame.K_5:
-                    self.keyboard_input = 5
+                    self.screen.keyboard_input += "5"
                 elif event.key == pygame.K_6:
-                    self.keyboard_input = 6
+                    self.screen.keyboard_input += "6"
                 elif event.key == pygame.K_7:
-                    self.keyboard_input = 7
+                    self.screen.keyboard_input += "7"
                 elif event.key == pygame.K_8:
-                    self.keyboard_input = 8
+                    self.screen.keyboard_input += "8"
                 elif event.key == pygame.K_9:
-                    self.keyboard_input = 9
+                    self.screen.keyboard_input += "9"
 
 
 
