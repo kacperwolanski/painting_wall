@@ -92,7 +92,7 @@ def draw_color_palette(tool_menu_length, tool_menu_height, draw_surface_length, 
             if index < len(Colors.COLORS):
                 color = Colors.COLORS[index]
             else:
-                color = Colors.WHITE
+                break
 
 
             samples.append([sample, color])
@@ -108,9 +108,11 @@ def draw_color_palette(tool_menu_length, tool_menu_height, draw_surface_length, 
         x_pos = draw_surface_length + Config.PIXEL_LENGTH
 
         # color choosing
-        ''' 
-        if color_choose != -1:
-            pygame.draw.rect(WIN, Colors.BLACK, samples[color_choose][0], 4)
-        '''
+
+    if color_choose != -1:
+        pygame.draw.rect(WIN, Colors.BLACK, samples[color_choose][0], 4)
+
+    print(Colors.COLORS)
+    print(len(samples),samples)
     return samples
 
