@@ -45,6 +45,7 @@ class Buttom:
 
         return color
 
+
 # generate buttoms function
 def generate_buttoms(tool_menu_length, tool_menu_height, draw_surface_length, draw_surface_height, shapes,
                      x_amount_of_shapes):
@@ -158,5 +159,3 @@ def generate_buttoms(tool_menu_length, tool_menu_height, draw_surface_length, dr
 def reset_buttom(pixels, color):
     for pixel in pixels:
         pixel.color = color
-
-

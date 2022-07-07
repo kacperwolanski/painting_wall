@@ -94,7 +94,6 @@ def draw_color_palette(tool_menu_length, tool_menu_height, draw_surface_length, 
             else:
                 break
 
-
             samples.append([sample, color])
 
             pygame.draw.rect(WIN, color, sample)
@@ -112,7 +111,4 @@ def draw_color_palette(tool_menu_length, tool_menu_height, draw_surface_length, 
     if color_choose != -1:
         pygame.draw.rect(WIN, Colors.BLACK, samples[color_choose][0], 4)
 
-    print(Colors.COLORS)
-    print(len(samples),samples)
     return samples
-

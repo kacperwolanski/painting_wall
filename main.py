@@ -12,21 +12,16 @@ pygame.font.init()
 font = pygame.font.Font('freesansbold.ttf', 10)
 main_menu = True
 
+
 class Paint:
 
     def __init__(self):
         self.run = True
         self.screen = Screen.Screen()
 
-
-
-
     def main_loop(self):
 
-
         while self.run:
-
-
             CLOCK.tick(Config.FPS)
             self.check_events()
 
@@ -67,9 +62,6 @@ class Paint:
                     self.screen.keyboard_input += "8"
                 elif event.key == pygame.K_9:
                     self.screen.keyboard_input += "9"
-
-
-
 
 
 def main():
