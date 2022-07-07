@@ -1,15 +1,18 @@
 import pygame
 import Config
 import Colors
+import Option_Window
 import main
 import Pixel
 import Slider
-
+import Buttom
+import Drawing
 
 WIN = main.WIN
 Paint = main.Paint
 
 font = main.font
+
 
 class Screen:
     def __init__(self):
@@ -18,9 +21,14 @@ class Screen:
         self.draw_surface_height = Config.WINDOW_HEIGHT * (Config.PIXEL_HEIGHT - 1) + 1
         self.tool_menu_length = Config.SCREEN_LENGTH - self.draw_surface_length
         self.tool_menu_height = self.draw_surface_height
+
         self.pixels = []
-        self.mouse_down = False
+
         # color staff
+
+        self.keyboard_input = ""
+        self.color_to_add = ()
+        self.palette_height = 1
         self.actual_color = Colors.BLACK
         self.samples = []
         self.color_choose = -1
@@ -28,28 +36,46 @@ class Screen:
 
         # tool staff
         self.sliders = []
+        self.buttoms = []
+        self.info_windows = {}
+        self.info_windows_names = []
+        self.append_tools = True
+        self.rubber = False
 
-    def check_if_mouse_is_down(self,drawing):
-        self.mouse_down = drawing
+        # shapes staff
+        self.x_amount_of_shapes = 3
+        self.shapes = {'Rectangle': [], 'Circle': [], 'Ellipse': [], 'Line': [], 'Square': [], 'Triangle': []}
 
     def generate_tools(self):
-        self.generate_pixels()
+        if self.append_tools:
+            self.generate_pixels()
+            self.sliders = Slider.generate_sliders(self.draw_surface_length, self.tool_menu_length, self.actual_color)
+            self.buttoms = Buttom.generate_buttoms(self.tool_menu_length, self.tool_menu_height,
+                                                   self.draw_surface_length, self.draw_surface_height, self.shapes,
+                                                   self.x_amount_of_shapes)
+            self.info_windows = Option_Window.generate_info_windows(self.draw_surface_height, self.tool_menu_height)
+            self.append_tools = False
 
-        # generate width slider
-        self.generate_sliders(WIN, self.draw_surface_length + self.tool_menu_length // 4,
-                              Config.PIXEL_LENGTH * 2,
-                              self.tool_menu_length // 2, Config.PIXEL_LENGTH * 5,
-                              Colors.LIGHT_GRAY, self.actual_color, 'actual_drawing_width')
-
+    # drawing staff
     def draw_the_window(self):
 
         WIN.fill(Colors.WHITE)
-        self.draw_the_drawing()
+        # print(self.info_windows)
+        self.make_the_drawing()
 
-        self.draw_color_palette()
-        self.draw_the_sliders()
-        self.draw_frames()
+        Drawing.draw_frames(self.draw_surface_length, self.draw_surface_height, self.tool_menu_length,
+                            self.tool_menu_height, self.actual_color, self.x_amount_of_shapes, self.shapes)
+
+        self.realize_info_windows()
+        self.samples = []
+
+        self.samples = Drawing.draw_color_palette(self.tool_menu_length, self.tool_menu_height,
+                                                  self.draw_surface_length, self.color_choose, self.samples,
+                                                  Config.palette_height)
+        self.realize_the_tools()
+        self.generate_tools()
         self.blit_text()
+
         pygame.display.update()
 
     def generate_pixels(self):
@@ -65,107 +91,150 @@ class Screen:
             offset_x += Config.PIXEL_LENGTH - 1
             offset_y = 0
 
-    def draw_the_drawing(self):
+    def make_the_drawing(self):
 
-        if self.mouse_down:
+        if pygame.mouse.get_pressed()[0]:
             for pixel in range(len(self.pixels)):
                 if self.pixels[pixel].rect.collidepoint(pygame.mouse.get_pos()):
-                    for w_x in range(self.actual_drawing_width):
-                        for w_y in range(self.actual_drawing_width):
-                            if pixel + w_x * Config.WINDOW_HEIGHT + w_y < len(self.pixels):
-                                self.pixels[pixel + w_x * Config.WINDOW_HEIGHT + w_y].color = self.actual_color
+                    if self.actual_drawing_width > 1:
+                        for w_x in range(self.actual_drawing_width):
+                            for w_y in range(self.actual_drawing_width):
+                                index = pixel + w_x * Config.WINDOW_HEIGHT + w_y
+                                if index < len(self.pixels) and self.pixels[index].y >= pygame.mouse.get_pos()[1]:
+                                    self.pixels[index].color = self.actual_color
+
+                    else:
+                        self.pixels[pixel].color = self.actual_color
 
         for i in self.pixels:
             pygame.draw.rect(WIN, i.color, i)
 
-    def draw_frames(self):
-        # draw surface
-        pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
-                         pygame.Rect(0, 0, self.draw_surface_length, self.draw_surface_height), Config.PIXEL_LENGTH)
-        # main menu
-        pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
-                         pygame.Rect(self.draw_surface_length, 0, self.tool_menu_length, self.tool_menu_height),
-                         Config.PIXEL_LENGTH)
+    def realize_the_tools(self):
 
-        # draw width adjusting frame
-        pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
-                         pygame.Rect(
-                             self.draw_surface_length + self.tool_menu_length * 3 // 4 - Config.PIXEL_LENGTH,
-                             Config.PIXEL_LENGTH,
-                             self.tool_menu_length // 8 + 2 * Config.PIXEL_LENGTH, Config.PIXEL_LENGTH * 5),
-                         Config.PIXEL_LENGTH)
+        # rubber
+        if self.rubber:
+            # rubber cleaning
 
-        pygame.draw.rect(WIN, self.actual_color,
-                         pygame.Rect(self.draw_surface_length + self.tool_menu_length * 3 // 4, Config.PIXEL_LENGTH,
-                                     self.tool_menu_length // 8, Config.PIXEL_LENGTH * 5))
+            # rubber frame
+            pygame.draw.rect(WIN, Colors.BLACK, pygame.Rect(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1],
+                                                            3 * self.actual_drawing_width,
+                                                            3 * self.actual_drawing_width), 2)
 
-    def draw_color_palette(self):
-
-        palette_height = self.tool_menu_height // 10
-        palettle_length = self.tool_menu_length
-        # draw palette surface
-        pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
-                         pygame.Rect(self.draw_surface_length, Config.PIXEL_LENGTH * 6, palettle_length,
-                                     palette_height),
-                         Config.PIXEL_LENGTH)
-        # draw color samples
-
-        sample_length = (palette_height - Config.PIXEL_LENGTH) // 3
-
-        x_pos = self.draw_surface_length + Config.PIXEL_LENGTH
-        y_pos = Config.PIXEL_LENGTH * 7
-        index = 0
-        for i in range(3):
-            for j in range(palettle_length // sample_length):
-
-                sample = pygame.Rect(x_pos, y_pos, sample_length, sample_length)
-
-                if index < len(Colors.COLORS):
-                    color = Colors.COLORS[index]
-                else:
-                    color = Colors.WHITE
-
-                self.samples.append([sample, color])
-
-                pygame.draw.rect(WIN, color, sample)
-
-                # grid
-                pygame.draw.rect(WIN, Colors.LIGHT_GRAY, pygame.Rect(x_pos, y_pos, sample_length, sample_length), 1)
-
-                x_pos += sample_length
-                index += 1
-            y_pos += sample_length
-            x_pos = self.draw_surface_length + Config.PIXEL_LENGTH
-
-            if self.color_choose != -1:
-                pygame.draw.rect(WIN, Colors.BLACK, self.samples[self.color_choose][0], 4)
-
-    def draw_the_sliders(self):
-
+        # sliders
         for slider in self.sliders:
-            slider[0].draw_the_slider(self.mouse_down)
+            slider[0].draw_the_slider()
 
             if slider[1] == 'actual_drawing_width':
                 self.actual_drawing_width = slider[0].return_val()
 
-    def generate_sliders(self, WIN, x, y, length, height, frame_color, buttom_color, variable):
+        # buttoms
+        for buttom in self.buttoms:
+            buttom[0].draw_the_buttom()
+            if buttom[0].active_buttom:
+                # Reset buttom
+                if buttom[1] == "Reset":
+                    Buttom.reset_buttom(self.pixels, Colors.WHITE)
+                # save draw buttom
 
-        # generate slider
-        slider = Slider.Slider(WIN, x, y, length, height, frame_color, buttom_color)
+                elif buttom[1] == "Rubber":
 
-        self.sliders.append([slider, variable])
+                    if self.rubber:
+                        self.rubber = False
+                    else:
+                        self.rubber = True
+                        self.actual_color = Colors.WHITE
 
-    def text_rendering(self, text, front_color, back_color, textRect_center):
-        text = font.render(text, True, front_color, back_color)
-        textRect = text.get_rect()
-        textRect.center = textRect_center
-        WIN.blit(text, textRect)
+                elif buttom[1] == "Save_draw":
+                    pass
 
+
+                # open draw buttom
+                elif buttom[1] == "Open_draw":
+                    pass
+
+
+                # shapes
+                elif buttom[1] in self.shapes:
+                    if buttom[1] == 'Rectangle':
+                        pass
+
+
+                elif buttom[1] in self.info_windows_names:
+                    if self.check_if_other_windows_work(buttom[1]):
+                        self.activate_window(buttom[1])
+
+    # info windows staff
+    def activate_window(self, name):
+        for window in list(self.info_windows.keys()):
+            if self.info_windows[window][1] == name:
+                self.info_windows[window][0] = True
+
+    def check_if_other_windows_work(self, name_of_window):
+        for window in list(self.info_windows.keys()):
+            if self.info_windows[window][0]:
+                if self.info_windows[window][1] != name_of_window:
+                    return False
+        return True
+
+    def realize_info_windows(self):
+        for window in self.info_windows.keys():
+            if len(self.info_windows_names) < len(self.info_windows):
+                self.info_windows_names.append(self.info_windows[window][1])
+
+            if self.info_windows[window][0]:
+                window.is_active = True
+                window.pop_window()
+
+                # fill background
+                if self.info_windows[window][1] == "Fill background":
+                    pygame.draw.rect(WIN, self.actual_color,
+                                     pygame.Rect(window.x + 50 + window.length / 2, window.y + window.height / 5, 15,
+                                                 15))
+
+                    if window.allow:
+                        Buttom.reset_buttom(self.pixels, self.actual_color)
+                        window.allow = False
+                    elif window.refuse:
+                        window.is_active = False
+                        window.refuse = False
+
+                # add color
+
+                elif self.info_windows[window][1] == "Add color":
+
+                    if window.color_adding:
+                        window.color_to_add = self.color_to_add
+
+                        if len(self.keyboard_input) == 3:
+                            self.color_to_add += (int(self.keyboard_input),)
+                            self.keyboard_input = ""
+
+                        if (len(self.color_to_add)) == 3:
+                            window.text = "Add color       ?"
+
+                            window.color_adding = False
+
+
+
+
+                    else:
+                        self.keyboard_input = ""
+
+                    if window.allow and len(self.color_to_add) == 3:
+                        print(self.color_to_add)
+                        Colors.COLORS.append(self.color_to_add)
+
+                        self.color_to_add = ()
+                    window.allow = False
+
+                self.info_windows[window][0] = window.is_active
+
+    # text staff
     def blit_text(self):
         # width adjusting
         # text "Adjust drawing width" render staff
-        self.text_rendering('Adjust drawing width', Colors.BLACK, Colors.LIGHT_GRAY,
-                            (self.draw_surface_length + self.tool_menu_length // 2, Config.PIXEL_LENGTH))
+        text_rendering('Adjust drawing width', Colors.BLACK, Colors.LIGHT_GRAY,
+                       (self.draw_surface_length + self.tool_menu_length // 2, Config.PIXEL_LENGTH))
 
         # blit actual width info
         if self.actual_color == Colors.BLACK:
@@ -173,7 +242,17 @@ class Screen:
         else:
             color = Colors.BLACK
 
-        self.text_rendering('W: ' + str(self.actual_drawing_width), color, self.actual_color, (
+        text_rendering('W: ' + str(self.actual_drawing_width), color, self.actual_color, (
             self.draw_surface_length + self.tool_menu_length * 3 // 4 + self.tool_menu_length // 16,
             Config.PIXEL_LENGTH * 3))
 
+        # shapes
+        text_rendering('Choose shape', Colors.BLACK, Colors.LIGHT_GRAY,
+                       (self.draw_surface_length + self.tool_menu_length // 2, self.tool_menu_height // 10 * 2))
+
+
+def text_rendering(text, front_color, back_color, textRect_center):
+    text = font.render(text, True, front_color, back_color)
+    textRect = text.get_rect()
+    textRect.center = textRect_center
+    WIN.blit(text, textRect)
