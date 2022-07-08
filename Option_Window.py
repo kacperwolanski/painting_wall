@@ -3,11 +3,10 @@ import pygame
 import Buttom
 import Colors
 import Config
-import Images
+
 import Screen
 import main
 
-WIN = main.WIN
 
 
 class Window:
@@ -35,7 +34,7 @@ class Window:
 
     def add_closing_buttom(self):
         closing_buttom_size = 5 * Config.PIXEL_LENGTH
-        closing_buttom = Buttom.Buttom(WIN, self.x + self.length - closing_buttom_size, self.y, closing_buttom_size,
+        closing_buttom = Buttom.Buttom( self.x + self.length - closing_buttom_size, self.y, closing_buttom_size,
                                        closing_buttom_size, "X",
                                        Colors.WHITE, Colors.RED, Colors.AQUA)
 
@@ -44,9 +43,9 @@ class Window:
     def pop_window(self):
 
         # window surface
-        pygame.draw.rect(WIN, Colors.LIGHT_GRAY, pygame.Rect(self.x, self.y, self.length, self.height))
-        # poping 3d experience frame
-        pygame.draw.rect(WIN, Colors.BLACK, pygame.Rect(self.x, self.y, self.length, self.height),
+        pygame.draw.rect(main.WIN, Colors.LIGHT_GRAY, pygame.Rect(self.x, self.y, self.length, self.height))
+        # poping 3d  frame
+        pygame.draw.rect(main.WIN, Colors.BLACK, pygame.Rect(self.x, self.y, self.length, self.height),
                          Config.PIXEL_HEIGHT)
         # text_render
         Screen.text_rendering(self.text, Colors.BLACK, Colors.LIGHT_GRAY,
@@ -85,7 +84,7 @@ class Window:
             self.buttom_length = len(text) * 3 * Config.PIXEL_LENGTH
         else:
             self.buttom_length = len(text) * 1.5 * Config.PIXEL_LENGTH
-        buttom = Buttom.Buttom(WIN, 10 * Config.PIXEL_LENGTH + self.buttom_x_offset, y + self.height // 2,
+        buttom = Buttom.Buttom( 10 * Config.PIXEL_LENGTH + self.buttom_x_offset, y + self.height // 2,
                                self.buttom_length, self.buttom_height, text, text_front_color, text_backing_color,
                                activate_color)
         self.buttoms.append([buttom, buttom_name])

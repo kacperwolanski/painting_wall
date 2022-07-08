@@ -13,3 +13,5 @@ FPS = 144
 
 
 palette_height = 1
+start_menu = True
+run = True
