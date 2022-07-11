@@ -206,9 +206,9 @@ class Screen:
                     if window.color_adding:
                         if window.clear:
                             window.clear = False
+
                             self.keyboard_input = ""
                             self.color_to_add = ()
-
 
                         if len(self.keyboard_input) == 3:
                             self.color_to_add += (int(self.keyboard_input),)
@@ -245,8 +245,6 @@ class Screen:
                             pygame.draw.rect(WIN, self.color_to_add, pygame.Rect(215, 705, 15, 15))
 
                 self.info_windows[window][0] = window.is_active
-
-
 
     # text staff
     def blit_text(self):

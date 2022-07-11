@@ -24,10 +24,9 @@ class Window:
         self.allow = False
 
         self.buttom_x_offset = 0
-#color staff
+        # color staff
         self.color_to_add = ""
         self.color_adding = False
-
 
         self.done = False
         self.clear = False
@@ -87,8 +86,10 @@ class Window:
                 if len(self.color_to_add) > 0:
                     buttom[0].text = str(self.color_to_add)
 
-                if self.done:
+                if self.done or self.clear:
                     buttom[0].text = "Press to add another one"
+                    self.text = "Add color by writing RGB values"
+                    self.color_adding = True
 
     def generate_buttoms(self, x, y, text, text_front_color, text_backing_color, activate_color, buttom_name):
         if len(text) < 10:
@@ -101,7 +102,6 @@ class Window:
         self.buttoms.append([buttom, buttom_name])
         self.buttom_x_offset += self.buttom_length + (self.length - 20 * Config.PIXEL_LENGTH) // (
                 self.buttoms_amount * 2)
-
 
 
 def generate_info_windows(draw_surface_height, tool_menu_height):
