@@ -8,7 +8,6 @@ import Screen
 import main
 
 
-
 class Window:
     def __init__(self, x, y, length, height, text, buttoms_amount):
         self.x = x
@@ -25,16 +24,19 @@ class Window:
         self.allow = False
 
         self.buttom_x_offset = 0
-
-        self.color_to_add = ()
+#color staff
+        self.color_to_add = ""
         self.color_adding = False
 
+
+        self.done = False
+        self.clear = False
 
         self.add_closing_buttom()
 
     def add_closing_buttom(self):
         closing_buttom_size = 5 * Config.PIXEL_LENGTH
-        closing_buttom = Buttom.Buttom( self.x + self.length - closing_buttom_size, self.y, closing_buttom_size,
+        closing_buttom = Buttom.Buttom(self.x + self.length - closing_buttom_size, self.y, closing_buttom_size,
                                        closing_buttom_size, "X",
                                        Colors.WHITE, Colors.RED, Colors.AQUA)
 
@@ -51,10 +53,6 @@ class Window:
         Screen.text_rendering(self.text, Colors.BLACK, Colors.LIGHT_GRAY,
                               (self.x + self.length / 2, self.y + self.height / 4))
 
-
-
-
-
         for buttom in self.buttoms:
 
             buttom[0].draw_the_buttom()
@@ -65,7 +63,10 @@ class Window:
                     self.color_adding = False
 
                 elif buttom[1] == "Write color":
+                    buttom[0].text = ""
+                    self.done = False
                     self.color_adding = True
+
 
 
                 elif buttom[1] == "Yes":
@@ -77,19 +78,30 @@ class Window:
                 elif buttom[1] == "Add":
                     self.allow = True
 
+                elif buttom[1] == "Clear values":
+                    self.clear = True
+                    print("Clear")
 
+            # changing buttom's text
+            if buttom[1] == "Write color":
+                if len(self.color_to_add) > 0:
+                    buttom[0].text = str(self.color_to_add)
 
-    def generate_buttoms(self,x, y, text, text_front_color, text_backing_color, activate_color, buttom_name):
+                if self.done:
+                    buttom[0].text = "Press to add another one"
+
+    def generate_buttoms(self, x, y, text, text_front_color, text_backing_color, activate_color, buttom_name):
         if len(text) < 10:
             self.buttom_length = len(text) * 3 * Config.PIXEL_LENGTH
         else:
             self.buttom_length = len(text) * 1.5 * Config.PIXEL_LENGTH
-        buttom = Buttom.Buttom(x+ 10 * Config.PIXEL_LENGTH + self.buttom_x_offset, y + self.height // 2,
+        buttom = Buttom.Buttom(x + 10 * Config.PIXEL_LENGTH + self.buttom_x_offset, y + self.height // 2,
                                self.buttom_length, self.buttom_height, text, text_front_color, text_backing_color,
                                activate_color)
         self.buttoms.append([buttom, buttom_name])
         self.buttom_x_offset += self.buttom_length + (self.length - 20 * Config.PIXEL_LENGTH) // (
-                    self.buttoms_amount * 2)
+                self.buttoms_amount * 2)
+
 
 
 def generate_info_windows(draw_surface_height, tool_menu_height):
@@ -99,12 +111,12 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
                               "Add color by writing RGB values", 3)
     # add color window buttoms
 
-    add_color_window.generate_buttoms(0,tool_menu_height, "ADD", Colors.BLACK, Colors.GRAY, Colors.AQUA,
+    add_color_window.generate_buttoms(0, tool_menu_height, "ADD", Colors.BLACK, Colors.GRAY, Colors.AQUA,
                                       "Add")
-    add_color_window.generate_buttoms(0,tool_menu_height, "CLEAR", Colors.BLACK, Colors.GRAY, Colors.AQUA,
+    add_color_window.generate_buttoms(0, tool_menu_height, "CLEAR", Colors.BLACK, Colors.GRAY, Colors.AQUA,
                                       "Clear values")
 
-    add_color_window.generate_buttoms(0,tool_menu_height, "Press to add color in RGB", Colors.GRAY, Colors.WHITE,
+    add_color_window.generate_buttoms(0, tool_menu_height, "Press to add color in RGB", Colors.GRAY, Colors.WHITE,
                                       Colors.AQUA,
                                       "Write color")
     info_windows.update({add_color_window: [False, "Add color"]})
@@ -114,9 +126,9 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
                                     "Fill the background with       ?", 2)
 
     # fill background window buttoms
-    fill_background_window.generate_buttoms(0,tool_menu_height, "Yes", Colors.BLACK, Colors.GRAY, Colors.AQUA,
+    fill_background_window.generate_buttoms(0, tool_menu_height, "Yes", Colors.BLACK, Colors.GRAY, Colors.AQUA,
                                             "Yes")
-    fill_background_window.generate_buttoms(0,tool_menu_height, "Cancel", Colors.BLACK, Colors.GRAY, Colors.AQUA,
+    fill_background_window.generate_buttoms(0, tool_menu_height, "Cancel", Colors.BLACK, Colors.GRAY, Colors.AQUA,
                                             "Cancel")
 
     info_windows.update({fill_background_window: [False, "Fill background"]})
@@ -126,7 +138,7 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
                               "Add the image", 1)
 
     # add image window buttoms
-    add_image_window.generate_buttoms(0,tool_menu_height, "Browse...", Colors.BLACK, Colors.GRAY, Colors.AQUA,
+    add_image_window.generate_buttoms(0, tool_menu_height, "Browse...", Colors.BLACK, Colors.GRAY, Colors.AQUA,
                                       "Browse")
 
     info_windows.update({add_image_window: [False, "Add image"]})
@@ -137,15 +149,15 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
                              3)
 
     # add text window buttoms
-    add_text_window.generate_buttoms(0,tool_menu_height, "Choose font type", Colors.BLACK, Colors.GRAY,
+    add_text_window.generate_buttoms(0, tool_menu_height, "Choose font type", Colors.BLACK, Colors.GRAY,
                                      Colors.AQUA,
                                      "Choose font type")
 
-    add_text_window.generate_buttoms(0,tool_menu_height, "Choose font size", Colors.BLACK, Colors.GRAY,
+    add_text_window.generate_buttoms(0, tool_menu_height, "Choose font size", Colors.BLACK, Colors.GRAY,
                                      Colors.AQUA,
                                      "Choose font size")
 
-    add_text_window.generate_buttoms(0,tool_menu_height, "Choose text color", Colors.BLACK, Colors.GRAY,
+    add_text_window.generate_buttoms(0, tool_menu_height, "Choose text color", Colors.BLACK, Colors.GRAY,
                                      Colors.AQUA,
                                      "Choose text color")
 

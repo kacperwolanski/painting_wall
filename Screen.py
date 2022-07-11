@@ -46,8 +46,6 @@ class Screen:
         self.x_amount_of_shapes = 3
         self.shapes = {'Rectangle': [], 'Circle': [], 'Ellipse': [], 'Line': [], 'Square': [], 'Triangle': []}
 
-
-
     def generate_tools(self):
         if self.append_tools:
             self.generate_pixels()
@@ -61,8 +59,8 @@ class Screen:
     # drawing staff
     def draw_the_window(self):
 
-
         WIN.fill(Colors.WHITE)
+        print(self.color_to_add)
         # print(self.info_windows)
         self.make_the_drawing()
 
@@ -70,7 +68,7 @@ class Screen:
                             self.tool_menu_height, self.actual_color, self.x_amount_of_shapes, self.shapes)
 
         self.realize_info_windows()
-        self.samples=[]
+        self.samples = []
 
         self.samples = Drawing.draw_color_palette(self.tool_menu_length, self.tool_menu_height,
                                                   self.draw_surface_length, self.color_choose, self.samples,
@@ -206,10 +204,15 @@ class Screen:
                 elif self.info_windows[window][1] == "Add color":
 
                     if window.color_adding:
-                        window.color_to_add = self.color_to_add
+                        if window.clear:
+                            window.clear = False
+                            self.keyboard_input = ""
+                            self.color_to_add = ()
+
 
                         if len(self.keyboard_input) == 3:
                             self.color_to_add += (int(self.keyboard_input),)
+
                             self.keyboard_input = ""
 
                         if (len(self.color_to_add)) == 3:
@@ -217,25 +220,32 @@ class Screen:
 
                             window.color_adding = False
 
+                        if len(self.keyboard_input) != 0:
 
+                            window.color_to_add = self.keyboard_input
 
+                        else:
+                            window.color_to_add = self.color_to_add
 
                     else:
                         self.keyboard_input = ""
 
+                    if len(self.color_to_add) == 3:
+                        if window.allow:
 
+                            Colors.COLORS.append(self.color_to_add)
+                            window.color_to_add = ""
+                            self.color_to_add = ()
+                            self.keyboard_input = ""
+                            window.allow = False
+                            window.text = "Add color by writing RGB values"
+                            window.done = True
 
-                    if window.allow and len(self.color_to_add) == 3:
-                        print(self.color_to_add)
-                        Colors.COLORS.append(self.color_to_add)
-
-
-                        self.color_to_add = ()
-                    window.allow = False
-
-
+                        else:
+                            pygame.draw.rect(WIN, self.color_to_add, pygame.Rect(215, 705, 15, 15))
 
                 self.info_windows[window][0] = window.is_active
+
 
 
     # text staff
