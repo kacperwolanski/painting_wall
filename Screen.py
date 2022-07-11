@@ -60,7 +60,7 @@ class Screen:
     def draw_the_window(self):
 
         WIN.fill(Colors.WHITE)
-        print(self.color_to_add)
+
         # print(self.info_windows)
         self.make_the_drawing()
 
@@ -177,6 +177,8 @@ class Screen:
                     return False
         return True
 
+
+
     def realize_info_windows(self):
         for window in self.info_windows.keys():
             if len(self.info_windows_names) < len(self.info_windows):
@@ -243,6 +245,22 @@ class Screen:
 
                         else:
                             pygame.draw.rect(WIN, self.color_to_add, pygame.Rect(215, 705, 15, 15))
+
+
+                elif self.info_windows[window][1] == "Add text":
+                    self.actual_color = Colors.WHITE
+
+                    if window.allow:
+                        window.is_active = False
+                        self.activate_window("Add text2")
+                        window.allow = False
+
+                    elif window.refuse:
+                        window.chosen_point = ""
+                        window.refuse = False
+                        window.text = "Choose place for text"
+
+
 
                 self.info_windows[window][0] = window.is_active
 

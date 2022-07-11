@@ -31,6 +31,7 @@ class Window:
         self.done = False
         self.clear = False
 
+        self.chosen_point = ""
         self.add_closing_buttom()
 
     def add_closing_buttom(self):
@@ -54,6 +55,7 @@ class Window:
 
         for buttom in self.buttoms:
 
+
             buttom[0].draw_the_buttom()
             # close buttom
             if buttom[0].active_buttom:
@@ -66,7 +68,8 @@ class Window:
                     self.done = False
                     self.color_adding = True
 
-
+                elif buttom[1]=="Ok":
+                    self.allow = True
 
                 elif buttom[1] == "Yes":
                     self.allow = True
@@ -79,7 +82,6 @@ class Window:
 
                 elif buttom[1] == "Clear values":
                     self.clear = True
-                    print("Clear")
 
             # changing buttom's text
             if buttom[1] == "Write color":
@@ -90,6 +92,20 @@ class Window:
                     buttom[0].text = "Press to add another one"
                     self.text = "Add color by writing RGB values"
                     self.color_adding = True
+
+
+            if buttom[1] == "Chosen point":
+
+
+                if pygame.mouse.get_pressed()[0]:
+                    print("prr")
+                    self.chosen_point = str(pygame.mouse.get_pos())
+                    buttom[0].change_color(Colors.BLUE_1)
+                    self.text = "Save this point?"
+                elif not self.chosen_point:
+                    buttom[0].text = str(pygame.mouse.get_pos())
+                    buttom[0].change_color(Colors.WHITE)
+
 
     def generate_buttoms(self, x, y, text, text_front_color, text_backing_color, activate_color, buttom_name):
         if len(text) < 10:
@@ -161,7 +177,23 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
                                      Colors.AQUA,
                                      "Choose text color")
 
-    info_windows.update({add_text_window: [False, "Add text"]})
+
+
+    # choose the text point window
+
+    choose_point_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 300, 200,
+                                 "Choose place for text", 3)
+    choose_point_window.generate_buttoms(0, tool_menu_height, "OK", Colors.BLACK, Colors.GRAY,
+                                         Colors.AQUA, "Ok")
+
+    choose_point_window.generate_buttoms(0, tool_menu_height, "CANCEL", Colors.BLACK, Colors.GRAY,
+                                         Colors.AQUA, "Cancel")
+    choose_point_window.generate_buttoms(0, tool_menu_height, "Chosen point", Colors.GRAY, Colors.WHITE,
+                                         Colors.AQUA, "Chosen point")
+
+
+    info_windows.update({choose_point_window: [False, "Add text"]})
+    info_windows.update({add_text_window: [False, "Add text2"]})
 
     # more options window
     more_options_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
@@ -170,3 +202,5 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
     info_windows.update({more_options_window: [False, "More options"]})
 
     return info_windows
+
+

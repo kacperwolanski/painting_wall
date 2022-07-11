@@ -44,6 +44,8 @@ class Buttom:
 
         return color
 
+    def change_color(self,new_color):
+        self.text_backing_color = new_color
 # generate buttoms function
 def generate_buttoms(tool_menu_length, tool_menu_height, draw_surface_length, draw_surface_height, shapes,
                      x_amount_of_shapes):
@@ -153,6 +155,7 @@ def generate_buttoms(tool_menu_length, tool_menu_height, draw_surface_length, dr
 
 
     return buttoms
+
 
 
 # reset buttom
