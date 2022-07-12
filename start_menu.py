@@ -2,7 +2,7 @@ import random
 
 import pygame
 import Config
-import Buttom
+import Button
 import Colors
 import Images
 import Option_Window
@@ -15,37 +15,37 @@ def xxx():
     y = 0
     i = 0
     j = 400
-    buttoms = []
+    buttons = []
     windows = {}
     windows_names = []
 
-    np_buttom = Buttom.Buttom(Config.SCREEN_LENGTH // 2, Config.SCREEN_HEIGHT // 2, 100, 40, "New Project", Colors.PINK,
+    np_button = Button.Button(Config.SCREEN_LENGTH // 2, Config.SCREEN_HEIGHT // 2, 100, 40, "New Project", Colors.PINK,
                               Colors.AZURE, Colors.RED)
-    op_buttom = Buttom.Buttom(Config.SCREEN_LENGTH // 2, Config.SCREEN_HEIGHT // 2 + 50, 100, 40, "Open Project",
+    op_button = Button.Button(Config.SCREEN_LENGTH // 2, Config.SCREEN_HEIGHT // 2 + 50, 100, 40, "Open Project",
                               Colors.PINK, Colors.AZURE, Colors.RED)
-    qt_buttom = Buttom.Buttom(Config.SCREEN_LENGTH // 2, Config.SCREEN_HEIGHT // 2 + 100, 100, 40, "Quit", Colors.PINK,
+    qt_button = Button.Button(Config.SCREEN_LENGTH // 2, Config.SCREEN_HEIGHT // 2 + 100, 100, 40, "Quit", Colors.PINK,
                               Colors.AZURE, Colors.RED)
 
     np_window = Option_Window.Window(Config.SCREEN_LENGTH // 2 + 200, Config.SCREEN_HEIGHT // 2, 200, 200,
                                      "Do you want to create new project?", 2)
-    np_window.generate_buttoms(Config.SCREEN_LENGTH // 2 + 200, Config.SCREEN_HEIGHT // 2, "Yes", Colors.PINK,
+    np_window.generate_buttons(Config.SCREEN_LENGTH // 2 + 200, Config.SCREEN_HEIGHT // 2, "Yes", Colors.PINK,
                                Colors.WHITE, Colors.RED, "Yes")
-    np_window.generate_buttoms(Config.SCREEN_LENGTH // 2 + 200, Config.SCREEN_HEIGHT // 2, "Cancel", Colors.PINK,
+    np_window.generate_buttons(Config.SCREEN_LENGTH // 2 + 200, Config.SCREEN_HEIGHT // 2, "Cancel", Colors.PINK,
                                Colors.WHITE, Colors.RED,
                                "Cancel")
 
     qt_window = Option_Window.Window(Config.SCREEN_LENGTH // 2 + 200, Config.SCREEN_HEIGHT // 2, 200, 200,
                                      "Do you want to close Painting wall?", 2)
-    qt_window.generate_buttoms(Config.SCREEN_LENGTH // 2 + 200, Config.SCREEN_HEIGHT // 2, "Yes", Colors.PINK,
+    qt_window.generate_buttons(Config.SCREEN_LENGTH // 2 + 200, Config.SCREEN_HEIGHT // 2, "Yes", Colors.PINK,
                                Colors.WHITE, Colors.RED,
                                "Yes")
-    qt_window.generate_buttoms(Config.SCREEN_LENGTH // 2 + 200, Config.SCREEN_HEIGHT // 2, "Cancel", Colors.PINK,
+    qt_window.generate_buttons(Config.SCREEN_LENGTH // 2 + 200, Config.SCREEN_HEIGHT // 2, "Cancel", Colors.PINK,
                                Colors.WHITE, Colors.RED,
                                "Cancel")
 
-    buttoms.append([np_buttom, "NP"])
-    buttoms.append([op_buttom, "OP"])
-    buttoms.append([qt_buttom, "QT"])
+    buttons.append([np_button, "NP"])
+    buttons.append([op_button, "OP"])
+    buttons.append([qt_button, "QT"])
 
     windows.update({np_window: [False, "NP"]})
     windows_names.append("NP")
@@ -90,16 +90,16 @@ def xxx():
             else:
                 pass
 
-        for buttom in buttoms:
+        for button in buttons:
 
-            buttom[0].draw_the_buttom()
-            if buttom[0].active_buttom:
-                if buttom[1] == "OP":
+            button[0].draw_the_button()
+            if button[0].active_button:
+                if button[1] == "OP":
                     pass
 
-                elif buttom[1] in windows_names:
+                elif button[1] in windows_names:
 
-                    windows = activate_window(buttom[1], windows)
+                    windows = activate_window(button[1], windows)
 
         for event in pygame.event.get():
 

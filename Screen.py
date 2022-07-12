@@ -5,7 +5,7 @@ import Option_Window
 import main
 import Pixel
 import Slider
-import Buttom
+import Button
 import Drawing
 
 WIN = main.WIN
@@ -36,7 +36,7 @@ class Screen:
 
         # tool staff
         self.sliders = []
-        self.buttoms = []
+        self.buttons = []
         self.info_windows = {}
         self.info_windows_names = []
         self.append_tools = True
@@ -50,7 +50,7 @@ class Screen:
         if self.append_tools:
             self.generate_pixels()
             self.sliders = Slider.generate_sliders(self.draw_surface_length, self.tool_menu_length, self.actual_color)
-            self.buttoms = Buttom.generate_buttoms(self.tool_menu_length, self.tool_menu_height,
+            self.buttons = Button.generate_buttons(self.tool_menu_length, self.tool_menu_height,
                                                    self.draw_surface_length, self.draw_surface_height, self.shapes,
                                                    self.x_amount_of_shapes)
             self.info_windows = Option_Window.generate_info_windows(self.draw_surface_height, self.tool_menu_height)
@@ -128,16 +128,16 @@ class Screen:
             if slider[1] == 'actual_drawing_width':
                 self.actual_drawing_width = slider[0].return_val()
 
-        # buttoms
-        for buttom in self.buttoms:
-            buttom[0].draw_the_buttom()
-            if buttom[0].active_buttom:
-                # Reset buttom
-                if buttom[1] == "Reset":
-                    Buttom.reset_buttom(self.pixels, Colors.WHITE)
-                # save draw buttom
+        # buttons
+        for button in self.buttons:
+            button[0].draw_the_button()
+            if button[0].active_button:
+                # Reset button
+                if button[1] == "Reset":
+                    Button.reset_button(self.pixels, Colors.WHITE)
+                # save draw button
 
-                elif buttom[1] == "Rubber":
+                elif button[1] == "Rubber":
 
                     if self.rubber:
                         self.rubber = False
@@ -145,24 +145,24 @@ class Screen:
                         self.rubber = True
                         self.actual_color = Colors.WHITE
 
-                elif buttom[1] == "Save_draw":
+                elif button[1] == "Save_draw":
                     pass
 
 
-                # open draw buttom
-                elif buttom[1] == "Open_draw":
+                # open draw button
+                elif button[1] == "Open_draw":
                     pass
 
 
                 # shapes
-                elif buttom[1] in self.shapes:
-                    if buttom[1] == 'Rectangle':
+                elif button[1] in self.shapes:
+                    if button[1] == 'Rectangle':
                         pass
 
 
-                elif buttom[1] in self.info_windows_names:
-                    if self.check_if_other_windows_work(buttom[1]):
-                        self.activate_window(buttom[1])
+                elif button[1] in self.info_windows_names:
+                    if self.check_if_other_windows_work(button[1]):
+                        self.activate_window(button[1])
 
     # info windows staff
     def activate_window(self, name):
@@ -195,7 +195,7 @@ class Screen:
                                                  15))
 
                     if window.allow:
-                        Buttom.reset_buttom(self.pixels, self.actual_color)
+                        Button.reset_button(self.pixels, self.actual_color)
                         window.allow = False
                     elif window.refuse:
                         window.is_active = False
