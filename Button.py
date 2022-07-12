@@ -28,7 +28,7 @@ class Button:
                          pygame.Rect(self.x, self.y, self.length, self.height))
 
         Screen.text_rendering(self.text, self.text_front_color, color,
-                              (self.x + self.length / 2, self.y + self.height / 2))
+                              (self.x + self.length / 2, self.y + self.height / 2),Config.BASIC_FONT)
 
     def button_press(self):
 

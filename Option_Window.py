@@ -5,6 +5,7 @@ import Colors
 import Config
 
 import Screen
+import Slider
 import main
 
 
@@ -19,24 +20,25 @@ class Window:
         self.button_length = 10 * Config.PIXEL_LENGTH
         self.button_height = 5 * Config.PIXEL_LENGTH
         self.buttons = []
+        self.sliders = []
         self.is_active = False
         self.refuse = False
         self.allow = False
 
         self.button_x_offset = 0
         # color staff
-        self.color_to_add = ""
+        self.value = ""
         self.color_adding = False
 
         self.done = False
         self.clear = False
         # text staff
+        self.actual_font = Config.TYPING_FONT
         self.typing_text = False
         self.choosing_font_size = False
         self.choosing_font_type = False
         self.choosing_text_color = False
-        self.chosen_point = ""
-
+        self.chosen_point = ()
 
         self.add_closing_buttom()
 
@@ -48,7 +50,7 @@ class Window:
 
         self.buttons.append([closing_button, "X"])
 
-    def pop_window(self):
+    def pop_window(self, drawing_surface):
 
         # window surface
         pygame.draw.rect(main.WIN, Colors.LIGHT_GRAY, pygame.Rect(self.x, self.y, self.length, self.height))
@@ -57,10 +59,9 @@ class Window:
                          Config.PIXEL_HEIGHT)
         # text_render
         Screen.text_rendering(self.text, Colors.BLACK, Colors.LIGHT_GRAY,
-                              (self.x + self.length / 2, self.y + self.height / 4))
+                              (self.x + self.length / 2, self.y + self.height / 4), self.actual_font)
 
         for button in self.buttons:
-
 
             button[0].draw_the_button()
             # close button
@@ -74,7 +75,7 @@ class Window:
                     self.done = False
                     self.color_adding = True
 
-                elif button[1]=="Ok":
+                elif button[1] == "Ok":
                     self.allow = True
 
                 elif button[1] == "Yes":
@@ -92,38 +93,39 @@ class Window:
                 elif button[1] == "Choose text color":
                     self.choosing_text_color = True
 
-                elif button[1] =="Choose font size":
+                elif button[1] == "Choose font size":
                     self.choosing_font_size = True
 
-                elif button[1] == "Choose font type":
-                    self.choosing_font_type = True
-
-                elif button[1] =="Type text":
+                elif button[1] == "Type text":
                     self.typing_text = True
 
             # changing button's text
             if button[1] == "Write color":
-                if len(self.color_to_add) > 0:
-                    button[0].text = str(self.color_to_add)
+                if len(self.value) > 0:
+                    button[0].text = str(self.value)
 
                 if self.done or self.clear:
                     button[0].text = "Press to add another one"
                     self.text = "Add color by writing RGB values"
                     self.color_adding = True
 
-
             if button[1] == "Chosen point":
+                if drawing_surface.collidepoint(pygame.mouse.get_pos()):
 
+                    if pygame.mouse.get_pressed()[0]:
 
-                if pygame.mouse.get_pressed()[0]:
+                        self.chosen_point = pygame.mouse.get_pos()
+                        button[0].change_color(Colors.BLUE_1)
+                        self.text = "Save this point?"
+                    elif not self.chosen_point:
+                        button[0].text = str(pygame.mouse.get_pos())
+                        button[0].change_color(Colors.WHITE)
 
-                    self.chosen_point = str(pygame.mouse.get_pos())
-                    button[0].change_color(Colors.BLUE_1)
-                    self.text = "Save this point?"
-                elif not self.chosen_point:
-                    button[0].text = str(pygame.mouse.get_pos())
-                    button[0].change_color(Colors.WHITE)
+        for slider in self.sliders:
+            slider[0].draw_the_slider()
 
+            if slider[1] == 'choose font size':
+                pass
 
     def generate_buttons(self, x, y, text, text_front_color, text_backing_color, activate_color, buttom_name):
         if len(text) < 10:
@@ -136,6 +138,10 @@ class Window:
         self.buttons.append([button, buttom_name])
         self.button_x_offset += self.button_length + (self.length - 20 * Config.PIXEL_LENGTH) // (
                 self.buttons_amount * 2)
+
+    def generate_sliders(self, x, y, length, height, frame_color, buttom_color, slider_name):
+        slider = Slider.Slider(x, y, length, height, frame_color, buttom_color)
+        self.sliders.append([slider, slider_name])
 
 
 def generate_info_windows(draw_surface_height, tool_menu_height):
@@ -178,7 +184,7 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
     info_windows.update({add_image_window: [False, "Add image"]})
 
     # add text window
-    add_text_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 700, 200,
+    add_text_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 630, 200,
                              "Choose font type, font size, text color and then click where you want to add text",
                              4)
 
@@ -215,50 +221,52 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
     choose_point_window.generate_buttons(0, tool_menu_height, "Chosen point", Colors.GRAY, Colors.WHITE,
                                          Colors.AQUA, "Chosen point")
 
-
     info_windows.update({choose_point_window: [False, "Add text"]})
 
     # choose font size window
-    choose_font_size_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 300, 200,
-                                 "Choose font size", 2)
+    choose_font_size_window = Window(630, draw_surface_height + Config.PIXEL_HEIGHT, 200, 200,
+                                     "Choose font size", 2)
 
     # choose font size window buttons
 
-    choose_font_size_window.generate_buttons(0, tool_menu_height, "OK", Colors.BLACK, Colors.GRAY,
+    choose_font_size_window.generate_buttons(630, tool_menu_height, "OK", Colors.BLACK, Colors.GRAY,
                                              Colors.AQUA, "Ok")
 
-    choose_font_size_window.generate_buttons(0, tool_menu_height, "CANCEL", Colors.BLACK, Colors.GRAY,
+    choose_font_size_window.generate_buttons(630, tool_menu_height, "CANCEL", Colors.BLACK, Colors.GRAY,
                                              Colors.AQUA, "Cancel")
 
-    info_windows.update({choose_font_size_window: [False,"Choose size"]})
+    # choose font size window slider
+    choose_font_size_window.generate_sliders(680, tool_menu_height + 150, 100, 20, Colors.GRAY, Colors.BLACK,
+                                             "choose font size")
 
+    info_windows.update({choose_font_size_window: [False, "Choose size"]})
 
     # choose font type window
-    choose_font_type_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 300, 200,
+    choose_font_type_window = Window(630, draw_surface_height + Config.PIXEL_HEIGHT, 420, 200,
                                      "Choose font type", 3)
 
     # choose font type window buttons
 
-    choose_font_type_window.generate_buttons(0, tool_menu_height, "text czcionka1", Colors.BLACK, Colors.GRAY,
+    choose_font_type_window.generate_buttons(630, tool_menu_height, "verdana", Colors.BLACK, Colors.GRAY,
                                              Colors.AQUA, "czc1")
 
-    choose_font_type_window.generate_buttons(0, tool_menu_height, "text czcionka2", Colors.BLACK, Colors.GRAY,
+    choose_font_type_window.generate_buttons(630, tool_menu_height, "dejavu", Colors.BLACK, Colors.GRAY,
                                              Colors.AQUA, "czc2")
 
-    choose_font_type_window.generate_buttons(0, tool_menu_height, "text czcionka3", Colors.BLACK, Colors.GRAY,
+    choose_font_type_window.generate_buttons(630, tool_menu_height, "desans", Colors.BLACK, Colors.GRAY,
                                              Colors.AQUA, "czc3")
 
     info_windows.update({choose_font_type_window: [False, "Choose type"]})
 
     # choose text color window
+    choose_text_color_window = Window(630, draw_surface_height + Config.PIXEL_HEIGHT, 350, 200,
+                                      "Choose text color", 1)
+    # choose text color window
+    choose_text_color_window.generate_buttons(630, tool_menu_height, "Choose color of text using color palette...",
+                                              Colors.BLACK, Colors.GRAY,
+                                              Colors.AQUA, "Choose color")
 
-
-
-
-
-
-
-
+    info_windows.update({choose_text_color_window: [False, "Choose text color"]})
 
     # more options window
     more_options_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
@@ -267,5 +275,3 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
     info_windows.update({more_options_window: [False, "More options"]})
 
     return info_windows
-
-

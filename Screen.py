@@ -11,7 +11,7 @@ import Drawing
 WIN = main.WIN
 Paint = main.Paint
 
-font = main.font
+font = Config.BASIC_FONT
 
 
 class Screen:
@@ -22,12 +22,14 @@ class Screen:
         self.tool_menu_length = Config.SCREEN_LENGTH - self.draw_surface_length
         self.tool_menu_height = self.draw_surface_height
 
+        self.draw_surface = pygame.Rect(0, 0, self.draw_surface_length, self.draw_surface_height)
+
         self.pixels = []
 
         # color staff
 
         self.keyboard_input = ""
-        self.color_to_add = ()
+        self.value = ()
         self.palette_height = 1
         self.actual_color = Colors.BLACK
         self.samples = []
@@ -41,6 +43,7 @@ class Screen:
         self.info_windows_names = []
         self.append_tools = True
         self.rubber = False
+        self.counter = 0
 
         # shapes staff
         self.x_amount_of_shapes = 3
@@ -58,6 +61,7 @@ class Screen:
 
     # drawing staff
     def draw_the_window(self):
+
 
         WIN.fill(Colors.WHITE)
 
@@ -177,8 +181,6 @@ class Screen:
                     return False
         return True
 
-
-
     def realize_info_windows(self):
         for window in self.info_windows.keys():
             if len(self.info_windows_names) < len(self.info_windows):
@@ -186,7 +188,7 @@ class Screen:
 
             if self.info_windows[window][0]:
                 window.is_active = True
-                window.pop_window()
+                window.pop_window(self.draw_surface)
 
                 # fill background
                 if self.info_windows[window][1] == "Fill background":
@@ -210,45 +212,49 @@ class Screen:
                             window.clear = False
 
                             self.keyboard_input = ""
-                            self.color_to_add = ()
+                            self.value = ()
 
                         if len(self.keyboard_input) == 3:
-                            self.color_to_add += (int(self.keyboard_input),)
+                            self.value += (int(self.keyboard_input),)
 
                             self.keyboard_input = ""
 
-                        if (len(self.color_to_add)) == 3:
+                        if (len(self.value)) == 3:
                             window.text = "Add color       ?"
 
                             window.color_adding = False
 
                         if len(self.keyboard_input) != 0:
 
-                            window.color_to_add = self.keyboard_input
+                            window.value = self.keyboard_input
 
                         else:
-                            window.color_to_add = self.color_to_add
+                            window.value = self.value
 
                     else:
                         self.keyboard_input = ""
 
-                    if len(self.color_to_add) == 3:
+                    if len(self.value) == 3:
                         if window.allow:
 
-                            Colors.COLORS.append(self.color_to_add)
-                            window.color_to_add = ""
-                            self.color_to_add = ()
+                            Colors.COLORS.append(self.value)
+                            window.value = ""
+                            self.value = ()
                             self.keyboard_input = ""
                             window.allow = False
                             window.text = "Add color by writing RGB values"
                             window.done = True
 
                         else:
-                            pygame.draw.rect(WIN, self.color_to_add, pygame.Rect(215, 705, 15, 15))
+                            pygame.draw.rect(WIN, self.value, pygame.Rect(215, 705, 15, 15))
 
 
                 elif self.info_windows[window][1] == "Add text":
+
                     self.actual_color = Colors.WHITE
+                    if window.chosen_point:
+                        self.value = window.chosen_point
+                        text_rendering("text here", Colors.BLACK, Colors.GRAY, window.chosen_point,font)
 
                     if window.allow:
                         window.is_active = False
@@ -261,6 +267,33 @@ class Screen:
                         window.text = "Choose place for text"
 
 
+                elif self.info_windows[window][1] =="Add text2":
+
+                    if window.choosing_font_type:
+                        self.activate_window("Choose type")
+                        window.choosing_font_type = False
+                    elif window.choosing_font_size:
+                        self.activate_window("Choose size")
+                        window.choosing_font_size= False
+                    elif window.choosing_text_color:
+                        self.activate_window("Choose text color")
+                        window.choosing_text_color = False
+                    elif window.typing_text:
+                        self.counter+=1
+                        if  self.counter %28:
+                            pygame.draw.line(WIN,Colors.BLACK,self.value,(int(self.value[0]),int(self.value[1])+Config.FONT_SIZE))
+
+
+
+                elif self.info_windows[window][1] =="Choose type":
+                    pass
+                elif self.info_windows[window][1] =="Choose size":
+                    pass
+
+                elif self.info_windows[window][1] =="Choose text color":
+                    pass
+
+
 
                 self.info_windows[window][0] = window.is_active
 
@@ -269,7 +302,7 @@ class Screen:
         # width adjusting
         # text "Adjust drawing width" render staff
         text_rendering('Adjust drawing width', Colors.BLACK, Colors.LIGHT_GRAY,
-                       (self.draw_surface_length + self.tool_menu_length // 2, Config.PIXEL_LENGTH))
+                       (self.draw_surface_length + self.tool_menu_length // 2, Config.PIXEL_LENGTH),font)
 
         # blit actual width info
         if self.actual_color == Colors.BLACK:
@@ -279,15 +312,16 @@ class Screen:
 
         text_rendering('W: ' + str(self.actual_drawing_width), color, self.actual_color, (
             self.draw_surface_length + self.tool_menu_length * 3 // 4 + self.tool_menu_length // 16,
-            Config.PIXEL_LENGTH * 3))
+            Config.PIXEL_LENGTH * 3),font)
 
         # shapes
         text_rendering('Choose shape', Colors.BLACK, Colors.LIGHT_GRAY,
-                       (self.draw_surface_length + self.tool_menu_length // 2, self.tool_menu_height // 10 * 2))
+                       (self.draw_surface_length + self.tool_menu_length // 2, self.tool_menu_height // 10 * 2),font)
 
 
-def text_rendering(text, front_color, back_color, textRect_center):
+def text_rendering(text, front_color, back_color, textRect_center,font):
     text = font.render(text, True, front_color, back_color)
     textRect = text.get_rect()
     textRect.center = textRect_center
+
     WIN.blit(text, textRect)
