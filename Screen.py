@@ -64,6 +64,7 @@ class Screen:
 
     # drawing staff
     def draw_the_window(self):
+        print(len(self.texts))
 
         WIN.fill(Colors.WHITE)
         self.make_the_drawing()
@@ -256,6 +257,10 @@ class Screen:
 
                     if window.allow:
                         window.is_active = False
+                        self.typing_text=""
+                        self.text_point = self.value
+                        self.texts.update({self.typing_text: self.text_point})
+                        self.text_point = ()
                         self.activate_window("Add text2")
                         window.allow = False
 
@@ -266,7 +271,6 @@ class Screen:
 
 
                 elif self.info_windows[window][1] == "Add text2":
-
 
                     if window.choosing_font_type:
                         self.activate_window("Choose type")
@@ -279,6 +283,7 @@ class Screen:
                         window.choosing_text_color = False
 
                     elif window.typing_text:
+                        actual_text = self.typing_text
 
                         self.cords = [int(self.value[0]) + 2.45 * len(self.typing_text), int(self.value[1]) - 10]
                         self.counter += 1
@@ -315,11 +320,9 @@ class Screen:
 
                         self.keyboard_input = ""
 
+                        self.texts[self.typing_text] = self.texts.pop(actual_text)
 
-                    elif  self.typing_text:
-                        self.text_point = self.value
-                        self.value = ()
-                        self.texts.update({self.typing_text:self.text_point})
+
 
 
 
@@ -333,7 +336,8 @@ class Screen:
 
                 self.info_windows[window][0] = window.is_active
                 print(self.typing_text)
-                print(window.typing_text)
+                print(self.texts)
+                print(self.value , self.text_point)
 
     # text staff
     def blit_text(self):
