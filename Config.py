@@ -1,6 +1,8 @@
 # pixels
 import pygame
 
+import Colors
+
 PIXEL_LENGTH = 4
 PIXEL_HEIGHT = 4
 
@@ -15,7 +17,8 @@ FPS = 144
 pygame.font.init()
 FONT_SIZE = 15
 FONT_TYPE = 'freesansbold.ttf'
-
+TYPING_COLOR = Colors.BLACK
+BACKGROUND_TYPING_COLOR = Colors.WHITE
 #verdana
 #dejavusansmono
 #dejavusans

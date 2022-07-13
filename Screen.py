@@ -16,20 +16,15 @@ font = Config.BASIC_FONT
 
 class Screen:
     def __init__(self):
-
         self.draw_surface_length = Config.WINDOW_LENGTH * (Config.PIXEL_LENGTH - 1)
         self.draw_surface_height = Config.WINDOW_HEIGHT * (Config.PIXEL_HEIGHT - 1) + 1
         self.tool_menu_length = Config.SCREEN_LENGTH - self.draw_surface_length
         self.tool_menu_height = self.draw_surface_height
-
         self.draw_surface = pygame.Rect(0, 0, self.draw_surface_length, self.draw_surface_height)
-
         self.pixels = []
 
         # color staff
-
         self.keyboard_input = ""
-        self.value = ()
         self.palette_height = 1
         self.actual_color = Colors.BLACK
         self.samples = []
@@ -37,6 +32,7 @@ class Screen:
         self.actual_drawing_width = 1
 
         # tool staff
+        self.value = ()
         self.sliders = []
         self.buttons = []
         self.info_windows = {}
@@ -44,6 +40,13 @@ class Screen:
         self.append_tools = True
         self.rubber = False
         self.counter = 0
+
+        # text staff
+        self.typing_text = ""
+        self.texts = {}
+        self.text_point = ()
+        self.capital = False
+        self.cords = []
 
         # shapes staff
         self.x_amount_of_shapes = 3
@@ -62,15 +65,12 @@ class Screen:
     # drawing staff
     def draw_the_window(self):
 
-
         WIN.fill(Colors.WHITE)
-
-        # print(self.info_windows)
         self.make_the_drawing()
-
         Drawing.draw_frames(self.draw_surface_length, self.draw_surface_height, self.tool_menu_length,
                             self.tool_menu_height, self.actual_color, self.x_amount_of_shapes, self.shapes)
 
+        self.blit_text()
         self.realize_info_windows()
         self.samples = []
 
@@ -79,8 +79,6 @@ class Screen:
                                                   Config.palette_height)
         self.realize_the_tools()
         self.generate_tools()
-        self.blit_text()
-
         pygame.display.update()
 
     def generate_pixels(self):
@@ -254,7 +252,7 @@ class Screen:
                     self.actual_color = Colors.WHITE
                     if window.chosen_point:
                         self.value = window.chosen_point
-                        text_rendering("text here", Colors.BLACK, Colors.GRAY, window.chosen_point,font)
+                        text_rendering("text here", Colors.BLACK, Colors.GRAY, window.chosen_point, font)
 
                     if window.allow:
                         window.is_active = False
@@ -267,42 +265,82 @@ class Screen:
                         window.text = "Choose place for text"
 
 
-                elif self.info_windows[window][1] =="Add text2":
+                elif self.info_windows[window][1] == "Add text2":
+
 
                     if window.choosing_font_type:
                         self.activate_window("Choose type")
                         window.choosing_font_type = False
                     elif window.choosing_font_size:
                         self.activate_window("Choose size")
-                        window.choosing_font_size= False
+                        window.choosing_font_size = False
                     elif window.choosing_text_color:
                         self.activate_window("Choose text color")
                         window.choosing_text_color = False
+
                     elif window.typing_text:
-                        self.counter+=1
-                        if  self.counter %28:
-                            pygame.draw.line(WIN,Colors.BLACK,self.value,(int(self.value[0]),int(self.value[1])+Config.FONT_SIZE))
+
+                        self.cords = [int(self.value[0]) + 2.45 * len(self.typing_text), int(self.value[1]) - 10]
+                        self.counter += 1
+
+                        if self.keyboard_input == "caps" and not self.capital:
+                            self.capital = True
+
+                        elif self.keyboard_input == "caps" and self.capital:
+                            self.capital = False
+
+                        elif self.keyboard_input == "down":
+                            lista = list(self.value)
+                            lista[1] += 2 * Config.FONT_SIZE
+                            self.value = tuple(lista)
+
+                        elif self.keyboard_input == "up":
+                            lista = list(self.value)
+                            lista[1] -= 2 * Config.FONT_SIZE
+                            self.value = tuple(lista)
+
+                        elif self.keyboard_input == "-":
+                            self.typing_text = self.typing_text[:-1]
+
+
+                        elif self.keyboard_input != "caps" and self.keyboard_input != "ent":
+
+                            if self.capital:
+                                self.keyboard_input = self.keyboard_input.upper()
+                            self.typing_text += self.keyboard_input
+
+                        if self.counter % 28:
+                            pygame.draw.line(WIN, Colors.BLACK, (self.cords[0], self.cords[1]),
+                                             (self.cords[0], self.cords[1] + Config.FONT_SIZE))
+
+                        self.keyboard_input = ""
+
+
+                    elif  self.typing_text:
+                        self.text_point = self.value
+                        self.value = ()
+                        self.texts.update({self.typing_text:self.text_point})
 
 
 
-                elif self.info_windows[window][1] =="Choose type":
+                elif self.info_windows[window][1] == "Choose type":
                     pass
-                elif self.info_windows[window][1] =="Choose size":
+                elif self.info_windows[window][1] == "Choose size":
                     pass
 
-                elif self.info_windows[window][1] =="Choose text color":
+                elif self.info_windows[window][1] == "Choose text color":
                     pass
-
-
 
                 self.info_windows[window][0] = window.is_active
+                print(self.typing_text)
+                print(window.typing_text)
 
     # text staff
     def blit_text(self):
         # width adjusting
         # text "Adjust drawing width" render staff
         text_rendering('Adjust drawing width', Colors.BLACK, Colors.LIGHT_GRAY,
-                       (self.draw_surface_length + self.tool_menu_length // 2, Config.PIXEL_LENGTH),font)
+                       (self.draw_surface_length + self.tool_menu_length // 2, Config.PIXEL_LENGTH), font)
 
         # blit actual width info
         if self.actual_color == Colors.BLACK:
@@ -312,14 +350,20 @@ class Screen:
 
         text_rendering('W: ' + str(self.actual_drawing_width), color, self.actual_color, (
             self.draw_surface_length + self.tool_menu_length * 3 // 4 + self.tool_menu_length // 16,
-            Config.PIXEL_LENGTH * 3),font)
+            Config.PIXEL_LENGTH * 3), font)
 
         # shapes
         text_rendering('Choose shape', Colors.BLACK, Colors.LIGHT_GRAY,
-                       (self.draw_surface_length + self.tool_menu_length // 2, self.tool_menu_height // 10 * 2),font)
+                       (self.draw_surface_length + self.tool_menu_length // 2, self.tool_menu_height // 10 * 2), font)
+
+        # adding text
+        for text in self.texts:
+            if self.texts[text]:
+                text_rendering(text, Config.TYPING_COLOR, Config.BACKGROUND_TYPING_COLOR,
+                               self.texts[text], Config.TYPING_FONT)
 
 
-def text_rendering(text, front_color, back_color, textRect_center,font):
+def text_rendering(text, front_color, back_color, textRect_center, font):
     text = font.render(text, True, front_color, back_color)
     textRect = text.get_rect()
     textRect.center = textRect_center

@@ -8,16 +8,10 @@ CLOCK = pygame.time.Clock()
 pygame.display.set_caption('Painting wall')
 
 
-
-
-
 class Paint:
-
-
 
     def __init__(self):
         self.screen = Screen.Screen()
-
 
     def main_loop(self):
         print(pygame.font.get_fonts())
@@ -34,13 +28,11 @@ class Paint:
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
-                Config.run= False
-
+                Config.run = False
 
             for s in self.screen.samples:
                 if s[0].collidepoint(pygame.mouse.get_pos()):
                     self.screen.color_choose = self.screen.samples.index(s)
-
 
                     if pygame.mouse.get_pressed()[0]:
                         self.screen.actual_color = s[1]
@@ -66,6 +58,7 @@ class Paint:
                     self.screen.keyboard_input += "8"
                 elif event.key == pygame.K_9:
                     self.screen.keyboard_input += "9"
+
                 elif event.key == pygame.K_a:
                     self.screen.keyboard_input += "a"
                 elif event.key == pygame.K_b:
@@ -116,7 +109,56 @@ class Paint:
                     self.screen.keyboard_input += "x"
                 elif event.key == pygame.K_y:
                     self.screen.keyboard_input += "y"
+                elif event.key == pygame.K_q:
+                    self.screen.keyboard_input += "q"
 
+                elif event.key == pygame.K_PERIOD:
+                    self.screen.keyboard_input += "."
+
+                elif event.key == pygame.K_COMMA:
+                    self.screen.keyboard_input += ","
+
+                elif event.key == pygame.K_SLASH:
+                    self.screen.keyboard_input += "/"
+
+                elif event.key == pygame.K_QUESTION:
+                    self.screen.keyboard_input += "?"
+
+                elif event.key == pygame.K_COLON:
+                    self.screen.keyboard_input += ":"
+
+                elif event.key == pygame.K_PLUS:
+                    self.screen.keyboard_input += "+"
+
+                elif event.key == pygame.K_LEFTPAREN:
+                    self.screen.keyboard_input += "("
+
+                elif event.key == pygame.K_RIGHTPAREN:
+                    self.screen.keyboard_input += ")"
+
+                elif event.key == pygame.K_EXCLAIM:
+                    self.screen.keyboard_input += "!"
+
+                elif event.key == pygame.K_HASH:
+                    self.screen.keyboard_input += "#"
+
+                elif event.key == pygame.K_EQUALS:
+                    self.screen.keyboard_input += "="
+
+                elif event.key == pygame.K_CAPSLOCK:
+                    self.screen.keyboard_input += "caps"
+
+                elif event.key == pygame.K_SPACE:
+                    self.screen.keyboard_input += " "
+
+                elif event.key == pygame.K_BACKSPACE:
+                    self.screen.keyboard_input += "-"
+
+                elif event.key == pygame.K_DOWN:
+                    self.screen.keyboard_input += "down"
+
+                elif event.key == pygame.K_UP:
+                    self.screen.keyboard_input += "up"
 
 
 def main():

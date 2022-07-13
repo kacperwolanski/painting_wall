@@ -96,8 +96,12 @@ class Window:
                 elif button[1] == "Choose font size":
                     self.choosing_font_size = True
 
-                elif button[1] == "Type text":
+                elif button[1] == "Type text" and not self.typing_text:
                     self.typing_text = True
+
+
+                elif button[1] == "Type text" and self.typing_text:
+                    self.typing_text = False
 
             # changing button's text
             if button[1] == "Write color":
@@ -115,11 +119,15 @@ class Window:
                     if pygame.mouse.get_pressed()[0]:
 
                         self.chosen_point = pygame.mouse.get_pos()
+
                         button[0].change_color(Colors.BLUE_1)
                         self.text = "Save this point?"
                     elif not self.chosen_point:
                         button[0].text = str(pygame.mouse.get_pos())
                         button[0].change_color(Colors.WHITE)
+
+
+
 
         for slider in self.sliders:
             slider[0].draw_the_slider()
