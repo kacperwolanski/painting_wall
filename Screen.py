@@ -257,10 +257,12 @@ class Screen:
 
                     if window.allow:
                         window.is_active = False
+
                         self.typing_text=""
                         self.text_point = self.value
                         self.texts.update({self.typing_text: self.text_point})
                         self.text_point = ()
+                        window.chosen_point = ()
                         self.activate_window("Add text2")
                         window.allow = False
 

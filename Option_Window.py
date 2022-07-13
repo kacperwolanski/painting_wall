@@ -116,15 +116,16 @@ class Window:
             if button[1] == "Chosen point":
                 if drawing_surface.collidepoint(pygame.mouse.get_pos()):
 
-                    if pygame.mouse.get_pressed()[0]:
+                    if pygame.mouse.get_pressed()[0] and not self.done:
 
                         self.chosen_point = pygame.mouse.get_pos()
-
+                        self.done = True
                         button[0].change_color(Colors.BLUE_1)
                         self.text = "Save this point?"
                     elif not self.chosen_point:
                         button[0].text = str(pygame.mouse.get_pos())
                         button[0].change_color(Colors.WHITE)
+                        self.done = False
 
 
 
