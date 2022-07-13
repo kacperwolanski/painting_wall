@@ -258,7 +258,7 @@ class Screen:
                     if window.allow:
                         window.is_active = False
 
-                        self.typing_text=""
+                        self.typing_text = ""
                         self.text_point = self.value
                         self.texts.update({self.typing_text: self.text_point})
                         self.text_point = ()
@@ -334,12 +334,14 @@ class Screen:
                     pass
 
                 elif self.info_windows[window][1] == "Choose text color":
-                    pass
+                    Config.TYPING_COLOR = self.actual_color
+                    text_rendering("Actual text color:",Colors.BLACK,Colors.LIGHT_GRAY,(800,self.tool_menu_height+150),font)
+                    pygame.draw.rect(WIN,self.actual_color,pygame.Rect(750,self.tool_menu_height+160,100,20))
 
                 self.info_windows[window][0] = window.is_active
                 print(self.typing_text)
                 print(self.texts)
-                print(self.value , self.text_point)
+                print(self.value, self.text_point)
 
     # text staff
     def blit_text(self):

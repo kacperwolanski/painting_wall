@@ -127,9 +127,6 @@ class Window:
                         button[0].change_color(Colors.WHITE)
                         self.done = False
 
-
-
-
         for slider in self.sliders:
             slider[0].draw_the_slider()
 
@@ -273,7 +270,7 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
     # choose text color window
     choose_text_color_window.generate_buttons(630, tool_menu_height, "Choose color of text using color palette...",
                                               Colors.BLACK, Colors.GRAY,
-                                              Colors.AQUA, "Choose color")
+                                              Colors.GRAY, "Choose color")
 
     info_windows.update({choose_text_color_window: [False, "Choose text color"]})
 
