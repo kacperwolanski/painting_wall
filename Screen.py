@@ -263,7 +263,7 @@ class Screen:
 
                         self.typing_text = ""
                         self.text_point = self.value
-                        self.texts.update({self.typing_text: self.text_point})
+                        self.texts.update({self.typing_text: [self.text_point,Config.FONT_TYPE,Config.FONT_SIZE]})
                         self.text_point = ()
                         window.chosen_point = ()
                         self.activate_window("Add text2")
@@ -326,14 +326,15 @@ class Screen:
                         self.keyboard_input = ""
 
                         self.texts[self.typing_text] = self.texts.pop(actual_text)
+                        self.texts[self.typing_text][1]=Config.FONT_TYPE
+                        if Config.FONT_TYPE =="fonts/FlappyBirdy.ttf":
+                            self.texts[self.typing_text][2]=Config.FONT_SIZE+5
 
 
                 elif self.info_windows[window][1] == "Choose font type":
-                    size =10
-                    if window.actual_font=="FlappyBirdy.ttf":
-                        size+=5
+                    size =Config.FONT_SIZE
 
-                    Config.TYPING_FONT = pygame.font.Font(window.actual_font,size)
+                    Config.FONT_TYPE = window.actual_font
 
 
 
@@ -373,10 +374,10 @@ class Screen:
         # adding text
 
         for text in self.texts:
-            if self.texts[text]:
+            if self.texts[text][0]:
 
                 text_rendering(text, Config.TYPING_COLOR, Config.BACKGROUND_TYPING_COLOR,
-                               self.texts[text], Config.TYPING_FONT)
+                               self.texts[text][0], pygame.font.Font(self.texts[text][1],self.texts[text][2]))
 
 
 def text_rendering(text, front_color, back_color, textRect_center, font):

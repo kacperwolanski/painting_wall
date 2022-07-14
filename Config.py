@@ -20,12 +20,12 @@ FPS = 144
 
 FONT_SIZE = 10
 
-FONT_TYPE = 'freesansbold.ttf'
+FONT_TYPE = 'fonts/freesansbold.ttf'
 TYPING_COLOR = Colors.BLACK
 BACKGROUND_TYPING_COLOR = Colors.WHITE
 
 
-BASIC_FONT = pygame.font.Font('freesansbold.ttf',10)
+BASIC_FONT = pygame.font.Font('fonts/freesansbold.ttf',10)
 
 TYPING_FONT = pygame.font.Font(FONT_TYPE,FONT_SIZE)
 palette_height = 1

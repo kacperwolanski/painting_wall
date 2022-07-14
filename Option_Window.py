@@ -100,13 +100,16 @@ class Window:
                     self.choosing_font_type = True
 
                 elif button[1] == "czc1":
-                    self.actual_font = "FlappyBirdy.ttf"
+                    self.actual_font = "fonts/FlappyBirdy.ttf"
 
                 elif button[1] == "czc2":
-                    self.actual_font = "GLADWINDEMORegular.ttf"
+                    self.actual_font = "fonts/GLADWINDEMORegular.ttf"
 
                 elif button[1] == "czc3":
-                    self.actual_font = "Minercraftory.ttf"
+                    self.actual_font = "fonts/Minercraftory.ttf"
+
+                elif button[1]=="czc4":
+                    self.actual_font = "fonts/freesansbold.ttf"
 
 
                 elif button[1] == "Type text" and not self.typing_text:
@@ -157,6 +160,8 @@ class Window:
         self.buttons.append([button, buttom_name])
         self.button_x_offset += self.button_length + (self.length - 20 * Config.PIXEL_LENGTH) // (
                 self.buttons_amount * 2)
+
+
 
     def generate_sliders(self, x, y, length, height, frame_color, buttom_color, slider_name):
         slider = Slider.Slider(x, y, length, height, frame_color, buttom_color)
@@ -274,6 +279,9 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
 
     choose_font_type_window.generate_buttons(630, tool_menu_height, "Black belt", Colors.BLACK, Colors.GRAY,
                                              Colors.AQUA, "czc3")
+
+    choose_font_type_window.generate_buttons(290, tool_menu_height+50, "Basic", Colors.BLACK, Colors.GRAY,
+                                             Colors.AQUA, "czc4")
 
     info_windows.update({choose_font_type_window: [False, "Choose font type"]})
 
