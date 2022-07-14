@@ -11,7 +11,7 @@ import Drawing
 WIN = main.WIN
 Paint = main.Paint
 
-font = Config.BASIC_FONT
+basic_font = Config.BASIC_FONT
 
 
 class Screen:
@@ -52,6 +52,7 @@ class Screen:
         self.x_amount_of_shapes = 3
         self.shapes = {'Rectangle': [], 'Circle': [], 'Ellipse': [], 'Line': [], 'Square': [], 'Triangle': []}
 
+
     def generate_tools(self):
         if self.append_tools:
             self.generate_pixels()
@@ -64,7 +65,9 @@ class Screen:
 
     # drawing staff
     def draw_the_window(self):
-        print(len(self.texts))
+        print("przet:", Config.TYPING_FONT,Config.FONT_TYPE)
+
+
 
         WIN.fill(Colors.WHITE)
         self.make_the_drawing()
@@ -253,7 +256,7 @@ class Screen:
                     self.actual_color = Colors.WHITE
                     if window.chosen_point:
                         self.value = window.chosen_point
-                        text_rendering("text here", Colors.BLACK, Colors.GRAY, window.chosen_point, font)
+                        text_rendering("text here", Colors.BLACK, Colors.GRAY, window.chosen_point, basic_font)
 
                     if window.allow:
                         window.is_active = False
@@ -275,7 +278,7 @@ class Screen:
                 elif self.info_windows[window][1] == "Add text2":
 
                     if window.choosing_font_type:
-                        self.activate_window("Choose type")
+                        self.activate_window("Choose font type")
                         window.choosing_font_type = False
                     elif window.choosing_font_size:
                         self.activate_window("Choose size")
@@ -325,30 +328,33 @@ class Screen:
                         self.texts[self.typing_text] = self.texts.pop(actual_text)
 
 
+                elif self.info_windows[window][1] == "Choose font type":
+                    size =10
+                    if window.actual_font=="FlappyBirdy.ttf":
+                        size+=5
+
+                    Config.TYPING_FONT = pygame.font.Font(window.actual_font,size)
 
 
 
-                elif self.info_windows[window][1] == "Choose type":
-                    pass
-                elif self.info_windows[window][1] == "Choose size":
+
+                elif self.info_windows[window][1] == "Choose font size":
                     pass
 
                 elif self.info_windows[window][1] == "Choose text color":
                     Config.TYPING_COLOR = self.actual_color
-                    text_rendering("Actual text color:",Colors.BLACK,Colors.LIGHT_GRAY,(800,self.tool_menu_height+150),font)
-                    pygame.draw.rect(WIN,self.actual_color,pygame.Rect(750,self.tool_menu_height+160,100,20))
+                    text_rendering("Actual text color:", Colors.BLACK, Colors.LIGHT_GRAY,
+                                   (800, self.tool_menu_height + 150), basic_font)
+                    pygame.draw.rect(WIN, self.actual_color, pygame.Rect(750, self.tool_menu_height + 160, 100, 20))
 
                 self.info_windows[window][0] = window.is_active
-                print(self.typing_text)
-                print(self.texts)
-                print(self.value, self.text_point)
 
     # text staff
     def blit_text(self):
         # width adjusting
         # text "Adjust drawing width" render staff
         text_rendering('Adjust drawing width', Colors.BLACK, Colors.LIGHT_GRAY,
-                       (self.draw_surface_length + self.tool_menu_length // 2, Config.PIXEL_LENGTH), font)
+                       (self.draw_surface_length + self.tool_menu_length // 2, Config.PIXEL_LENGTH), basic_font)
 
         # blit actual width info
         if self.actual_color == Colors.BLACK:
@@ -358,20 +364,23 @@ class Screen:
 
         text_rendering('W: ' + str(self.actual_drawing_width), color, self.actual_color, (
             self.draw_surface_length + self.tool_menu_length * 3 // 4 + self.tool_menu_length // 16,
-            Config.PIXEL_LENGTH * 3), font)
+            Config.PIXEL_LENGTH * 3), basic_font)
 
         # shapes
         text_rendering('Choose shape', Colors.BLACK, Colors.LIGHT_GRAY,
-                       (self.draw_surface_length + self.tool_menu_length // 2, self.tool_menu_height // 10 * 2), font)
+                       (self.draw_surface_length + self.tool_menu_length // 2, self.tool_menu_height // 10 * 2), basic_font)
 
         # adding text
+
         for text in self.texts:
             if self.texts[text]:
+
                 text_rendering(text, Config.TYPING_COLOR, Config.BACKGROUND_TYPING_COLOR,
                                self.texts[text], Config.TYPING_FONT)
 
 
 def text_rendering(text, front_color, back_color, textRect_center, font):
+
     text = font.render(text, True, front_color, back_color)
     textRect = text.get_rect()
     textRect.center = textRect_center

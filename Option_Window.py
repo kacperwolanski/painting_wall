@@ -33,7 +33,7 @@ class Window:
         self.done = False
         self.clear = False
         # text staff
-        self.actual_font = Config.TYPING_FONT
+        self.actual_font = "freesansbold.ttf"
         self.typing_text = False
         self.choosing_font_size = False
         self.choosing_font_type = False
@@ -59,7 +59,7 @@ class Window:
                          Config.PIXEL_HEIGHT)
         # text_render
         Screen.text_rendering(self.text, Colors.BLACK, Colors.LIGHT_GRAY,
-                              (self.x + self.length / 2, self.y + self.height / 4), self.actual_font)
+                              (self.x + self.length / 2, self.y + self.height / 4), Config.BASIC_FONT)
 
         for button in self.buttons:
 
@@ -95,6 +95,19 @@ class Window:
 
                 elif button[1] == "Choose font size":
                     self.choosing_font_size = True
+
+                elif button[1] == "Choose font type":
+                    self.choosing_font_type = True
+
+                elif button[1] == "czc1":
+                    self.actual_font = "FlappyBirdy.ttf"
+
+                elif button[1] == "czc2":
+                    self.actual_font = "GLADWINDEMORegular.ttf"
+
+                elif button[1] == "czc3":
+                    self.actual_font = "Minercraftory.ttf"
+
 
                 elif button[1] == "Type text" and not self.typing_text:
                     self.typing_text = True
@@ -253,16 +266,16 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
 
     # choose font type window buttons
 
-    choose_font_type_window.generate_buttons(630, tool_menu_height, "verdana", Colors.BLACK, Colors.GRAY,
+    choose_font_type_window.generate_buttons(630, tool_menu_height, "FlappyBirdy", Colors.BLACK, Colors.GRAY,
                                              Colors.AQUA, "czc1")
 
-    choose_font_type_window.generate_buttons(630, tool_menu_height, "dejavu", Colors.BLACK, Colors.GRAY,
+    choose_font_type_window.generate_buttons(630, tool_menu_height, "Slim", Colors.BLACK, Colors.GRAY,
                                              Colors.AQUA, "czc2")
 
-    choose_font_type_window.generate_buttons(630, tool_menu_height, "desans", Colors.BLACK, Colors.GRAY,
+    choose_font_type_window.generate_buttons(630, tool_menu_height, "Black belt", Colors.BLACK, Colors.GRAY,
                                              Colors.AQUA, "czc3")
 
-    info_windows.update({choose_font_type_window: [False, "Choose type"]})
+    info_windows.update({choose_font_type_window: [False, "Choose font type"]})
 
     # choose text color window
     choose_text_color_window = Window(630, draw_surface_height + Config.PIXEL_HEIGHT, 350, 200,

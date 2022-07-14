@@ -14,7 +14,7 @@ class Paint:
         self.screen = Screen.Screen()
 
     def main_loop(self):
-        print(pygame.font.get_fonts())
+
         if Config.start_menu:
             start_menu.xxx()
 
