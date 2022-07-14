@@ -146,8 +146,9 @@ class Window:
         for slider in self.sliders:
             slider[0].draw_the_slider()
 
-            if slider[1] == 'choose font size':
-                pass
+            if slider[1] == "Choose font size":
+                self.value = slider[0].return_val()
+
 
     def generate_buttons(self, x, y, text, text_front_color, text_backing_color, activate_color, buttom_name):
         if len(text) < 10:
@@ -261,9 +262,9 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
 
     # choose font size window slider
     choose_font_size_window.generate_sliders(680, tool_menu_height + 150, 100, 20, Colors.GRAY, Colors.BLACK,
-                                             "choose font size")
+                                             "Choose font size")
 
-    info_windows.update({choose_font_size_window: [False, "Choose size"]})
+    info_windows.update({choose_font_size_window: [False, "Choose font size"]})
 
     # choose font type window
     choose_font_type_window = Window(630, draw_surface_height + Config.PIXEL_HEIGHT, 420, 200,

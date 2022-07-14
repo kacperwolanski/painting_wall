@@ -65,7 +65,7 @@ class Screen:
 
     # drawing staff
     def draw_the_window(self):
-        print("przet:", Config.TYPING_FONT,Config.FONT_TYPE)
+
 
 
 
@@ -281,7 +281,7 @@ class Screen:
                         self.activate_window("Choose font type")
                         window.choosing_font_type = False
                     elif window.choosing_font_size:
-                        self.activate_window("Choose size")
+                        self.activate_window("Choose font size")
                         window.choosing_font_size = False
                     elif window.choosing_text_color:
                         self.activate_window("Choose text color")
@@ -340,7 +340,12 @@ class Screen:
 
 
                 elif self.info_windows[window][1] == "Choose font size":
-                    pass
+                    self.texts[self.typing_text][2] = window.value
+                    if window.allow:
+                        window.value=""
+                        window.allow = False
+                        window.is_active = False
+
 
                 elif self.info_windows[window][1] == "Choose text color":
                     Config.TYPING_COLOR = self.actual_color
@@ -382,6 +387,7 @@ class Screen:
 
 def text_rendering(text, front_color, back_color, textRect_center, font):
 
+    print(Config.FONT_SIZE)
     text = font.render(text, True, front_color, back_color)
     textRect = text.get_rect()
     textRect.center = textRect_center
