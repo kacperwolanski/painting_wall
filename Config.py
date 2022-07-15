@@ -1,4 +1,11 @@
 # pixels
+import pygame
+
+import Colors
+
+pygame.font.init()
+
+
 PIXEL_LENGTH = 4
 PIXEL_HEIGHT = 4
 
@@ -11,7 +18,16 @@ SCREEN_HEIGHT = WINDOW_HEIGHT * PIXEL_HEIGHT
 
 FPS = 144
 
+FONT_SIZE = 10
 
+FONT_TYPE = 'fonts/freesansbold.ttf'
+TYPING_COLOR = Colors.BLACK
+BACKGROUND_TYPING_COLOR = Colors.WHITE
+
+
+BASIC_FONT = pygame.font.Font('fonts/freesansbold.ttf',10)
+
+#TYPING_FONT = pygame.font.Font(FONT_TYPE,FONT_SIZE)
 palette_height = 1
-start_menu = True
+start_menu = False
 run = True
