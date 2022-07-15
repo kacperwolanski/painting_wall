@@ -7,6 +7,7 @@ import Pixel
 import Slider
 import Button
 import Drawing
+import Text
 
 WIN = main.WIN
 Paint = main.Paint
@@ -40,10 +41,11 @@ class Screen:
         self.append_tools = True
         self.rubber = False
         self.counter = 0
+        self.actual_item = -1
 
         # text staff
         self.typing_text = ""
-        self.texts = {}
+        self.texts = []
         self.text_point = ()
         self.capital = False
         self.cords = []
@@ -248,8 +250,8 @@ class Screen:
 
 
                 elif self.info_windows[window][1] == "Add text":
-
-                    self.actual_color = Colors.WHITE
+                    if self.actual_color == Colors.BLACK:
+                        self.actual_color = Colors.WHITE
                     if window.chosen_point:
                         self.value = window.chosen_point
                         text_rendering("text here", Colors.BLACK, Colors.GRAY, window.chosen_point, basic_font)
@@ -259,7 +261,12 @@ class Screen:
 
                         self.typing_text = ""
                         self.text_point = self.value
-                        self.texts.update({self.typing_text: [self.text_point, Config.FONT_TYPE, Config.FONT_SIZE]})
+                        self.actual_item += 1
+                        new_text = Text.Text(self.typing_text, self.text_point, Config.FONT_TYPE,
+                                             Config.TYPING_COLOR, Config.BACKGROUND_TYPING_COLOR, Config.FONT_SIZE)
+                        if len(self.texts) == self.actual_item:
+                            self.texts.append(new_text)
+
                         self.text_point = ()
                         window.chosen_point = ()
                         self.activate_window("Add text2")
@@ -308,7 +315,6 @@ class Screen:
                         elif self.keyboard_input == "-":
                             self.typing_text = self.typing_text[:-1]
 
-
                         elif self.keyboard_input != "caps" and self.keyboard_input != "ent":
 
                             if self.capital:
@@ -319,40 +325,27 @@ class Screen:
                             pygame.draw.line(WIN, Colors.BLACK, (self.cords[0], self.cords[1]),
                                              (self.cords[0], self.cords[1] + Config.FONT_SIZE))
 
-                        self.keyboard_input = ""
-
-                        self.texts[self.typing_text] = self.texts.pop(actual_text)
-                        self.texts[self.typing_text][1] = Config.FONT_TYPE
-                        if Config.FONT_TYPE == "fonts/FlappyBirdy.ttf":
-                            self.texts[self.typing_text][2] = Config.FONT_SIZE + 5
-
+                        self.texts[self.actual_item].text = self.typing_text
 
                 elif self.info_windows[window][1] == "Choose font type":
-                    size = Config.FONT_SIZE
-
-                    Config.FONT_TYPE = window.actual_font
-
-
-
+                    self.texts[self.actual_item].font_type = window.actual_font
 
                 elif self.info_windows[window][1] == "Choose font size":
-                    self.texts[self.typing_text][2] = window.value
+                    Config.FONT_SIZE = window.value
+                    self.texts[self.actual_item].size = window.value
                     if window.allow:
                         window.value = ""
                         window.allow = False
                         window.is_active = False
 
-
                 elif self.info_windows[window][1] == "Choose text color":
-
-
                     if window.choosing_font_color:
                         window.choosing_font_color = False
-                        Config.TYPING_COLOR = self.actual_color
+                        self.texts[self.actual_item].font_color = self.actual_color
 
                     if window.choosing_text_background_color:
                         window.choosing_text_background_color = False
-                        Config.BACKGROUND_TYPING_COLOR = self.actual_color
+                        self.texts[self.actual_item].text_background_color = self.actual_color
 
                     text_rendering("Actual font color:", Colors.BLACK, Colors.LIGHT_GRAY,
                                    (800, self.tool_menu_height + 80), basic_font)
@@ -366,6 +359,8 @@ class Screen:
                                      pygame.Rect(750, self.tool_menu_height + 170, 100, 20))
 
                 self.info_windows[window][0] = window.is_active
+                self.keyboard_input = ""
+                self.counter = 0
 
     # text staff
     def blit_text(self):
@@ -390,11 +385,9 @@ class Screen:
                        basic_font)
 
         # adding text
-
         for text in self.texts:
-            if self.texts[text][0]:
-                text_rendering(text, Config.TYPING_COLOR, Config.BACKGROUND_TYPING_COLOR,
-                               self.texts[text][0], pygame.font.Font(self.texts[text][1], self.texts[text][2]))
+            if text.text_point:
+                text.pop_text()
 
 
 def text_rendering(text, front_color, back_color, textRect_center, font):

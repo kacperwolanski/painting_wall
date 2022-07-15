@@ -27,7 +27,7 @@ BACKGROUND_TYPING_COLOR = Colors.WHITE
 
 BASIC_FONT = pygame.font.Font('fonts/freesansbold.ttf',10)
 
-TYPING_FONT = pygame.font.Font(FONT_TYPE,FONT_SIZE)
+#TYPING_FONT = pygame.font.Font(FONT_TYPE,FONT_SIZE)
 palette_height = 1
 start_menu = False
 run = True
