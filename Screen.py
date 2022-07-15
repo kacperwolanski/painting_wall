@@ -54,6 +54,10 @@ class Screen:
         self.x_amount_of_shapes = 3
         self.shapes = {'Rectangle': [], 'Circle': [], 'Ellipse': [], 'Line': [], 'Square': [], 'Triangle': []}
 
+        #images staff
+        self.images=[]
+        
+
     def generate_tools(self):
         if self.append_tools:
             self.generate_pixels()
@@ -67,10 +71,11 @@ class Screen:
     # drawing staff
     def draw_the_window(self):
 
+
         WIN.fill(Colors.WHITE)
         self.make_the_drawing()
         Drawing.draw_frames(self.draw_surface_length, self.draw_surface_height, self.tool_menu_length,
-                            self.tool_menu_height, self.actual_color, self.x_amount_of_shapes, self.shapes)
+                            self.tool_menu_height, self.actual_color, self.x_amount_of_shapes, self.shapes,self.images)
 
         self.blit_text()
         self.realize_info_windows()
@@ -193,7 +198,8 @@ class Screen:
                 # fill background
                 if self.info_windows[window][1] == "Fill background":
                     pygame.draw.rect(WIN, self.actual_color,
-                                     pygame.Rect(window.x + 50 + window.length / 2, window.y + window.height / 5, 15,
+                                     pygame.Rect(window.x + 50 + window.length / 2, window.y + window.height / 5,
+                                                 15,
                                                  15))
 
                     if window.allow:
@@ -350,7 +356,8 @@ class Screen:
                     text_rendering("Actual font color:", Colors.BLACK, Colors.LIGHT_GRAY,
                                    (800, self.tool_menu_height + 80), basic_font)
 
-                    pygame.draw.rect(WIN, Config.TYPING_COLOR, pygame.Rect(750, self.tool_menu_height + 90, 100, 20))
+                    pygame.draw.rect(WIN, Config.TYPING_COLOR,
+                                     pygame.Rect(750, self.tool_menu_height + 90, 100, 20))
 
                     text_rendering("Actual background color:", Colors.BLACK, Colors.LIGHT_GRAY,
                                    (800, self.tool_menu_height + 160), basic_font)
@@ -358,6 +365,29 @@ class Screen:
                     pygame.draw.rect(WIN, Config.BACKGROUND_TYPING_COLOR,
                                      pygame.Rect(750, self.tool_menu_height + 170, 100, 20))
 
+
+                elif self.info_windows[window][1] == "Select image point":
+                    self.activate_window("Select image point")
+                    if window.allow:
+                        window.allow = False
+                        self.value = window.chosen_point
+                        self.activate_window("Add image")
+
+                elif self.info_windows[window][1] == "Add image":
+
+                    if window.adding_images:
+                        #window.adding_images = False
+                        self.activate_window("Select image")
+
+                elif self.info_windows[window][1] == "Select image":
+                    if window.image_to_add:
+                        self.images.append([window.image_to_add,self.value])
+
+
+
+
+
+#reset values
                 self.info_windows[window][0] = window.is_active
                 self.keyboard_input = ""
                 self.counter = 0
@@ -388,7 +418,6 @@ class Screen:
         for text in self.texts:
             if text.text_point:
                 text.pop_text()
-
 
 def text_rendering(text, front_color, back_color, textRect_center, font):
     text = font.render(text, True, front_color, back_color)

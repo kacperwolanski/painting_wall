@@ -4,7 +4,7 @@ import pygame
 import Config
 import Button
 import Colors
-import Images
+import file_operations
 import Option_Window
 import Screen
 import main
@@ -57,7 +57,7 @@ def xxx():
     while Config.start_menu:
 
         main.CLOCK.tick(Config.FPS)
-        main.WIN.blit(Images.start_menu_image, (8, 8))
+        main.WIN.blit(file_operations.start_menu_image, (8, 8))
 
         for window in windows.keys():
             if len(windows_names) < len(windows):
@@ -66,7 +66,8 @@ def xxx():
             if windows[window][0]:
                 window.is_active = True
 
-                window.pop_window()
+                window.pop_window(pygame.Rect(0, 0, Config.WINDOW_LENGTH * (Config.PIXEL_LENGTH - 1),
+                                              Config.WINDOW_HEIGHT * (Config.PIXEL_HEIGHT - 1) + 1))
 
                 if windows[window][1] == "NP":
 
