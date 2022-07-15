@@ -9,7 +9,7 @@ palette_height = 1
 
 
 def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool_menu_height, actual_color,
-                x_amount_of_shapes, shapes):
+                x_amount_of_shapes, shapes,images):
     # draw surface
     pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
                      pygame.Rect(0, 0, draw_surface_length, draw_surface_height), Config.PIXEL_LENGTH)
@@ -52,6 +52,11 @@ def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool
     # draw shapes grid
     grid_length = tool_menu_length // x_amount_of_shapes
     grid_height = tool_menu_height // (2 * x_amount_of_shapes)
+
+
+    # draw images
+    for image in images:
+        WIN.blit(image[0],image[1])
 
     for x in range(x_amount_of_shapes):
         for y in range(len(shapes) // x_amount_of_shapes):

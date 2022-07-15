@@ -1,14 +1,5 @@
 import pygame
-import Config
-import Colors
-import Option_Window
 import Screen
-import main
-import Pixel
-import Slider
-import Button
-import Drawing
-
 
 class Text:
     def __init__(self, text, text_point, font_type, font_color, text_background_color, size):
@@ -24,5 +15,4 @@ class Text:
         Screen.text_rendering(self.text, self.font_color, self.text_background_color, self.text_point,
                               pygame.font.Font(self.font_type, self.size))
 
-    def remove_text(self):
-        pass
+

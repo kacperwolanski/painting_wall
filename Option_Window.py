@@ -6,6 +6,7 @@ import Config
 
 import Screen
 import Slider
+import file_operations
 import main
 
 
@@ -41,8 +42,12 @@ class Window:
         self.choosing_text_color = False
         self.choosing_font_color = False
         self.choosing_text_background_color = False
-
         self.chosen_point = ()
+
+        # images staff
+        self.adding_images = False
+        self.image_to_add = ""
+
 
         self.add_closing_buttom()
 
@@ -66,6 +71,7 @@ class Window:
                               (self.x + self.length / 2, self.y + self.height / 4), Config.BASIC_FONT)
 
         for button in self.buttons:
+
 
             button[0].draw_the_button()
             # close button
@@ -95,7 +101,7 @@ class Window:
                     self.clear = True
 
 
-
+# text font staff
                 elif button[1] == "Choose font size":
                     self.choosing_font_size = True
 
@@ -129,6 +135,19 @@ class Window:
 
                 elif button[1] == "Choose text background color":
                     self.choosing_text_background_color = True
+
+
+# adding images
+                elif button[1] == "Browse":
+                    self.adding_images = True
+
+                elif button[1] in list(file_operations.images_to_draw.keys()):
+
+                    self.image_to_add = file_operations.images_to_draw[button[1]][0]
+
+
+
+
 
             # changing button's text
             if button[1] == "Write color":
@@ -169,6 +188,7 @@ class Window:
                                self.button_length, self.button_height, text, text_front_color, text_backing_color,
                                activate_color)
         self.buttons.append([button, buttom_name])
+
         self.button_x_offset += self.button_length + (self.length - 20 * Config.PIXEL_LENGTH) // (
                 self.buttons_amount * 2)
 
@@ -206,15 +226,57 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
 
     info_windows.update({fill_background_window: [False, "Fill background"]})
 
-    # add image window
-    add_image_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 200, 200,
-                              "Add the image", 1)
 
-    # add image window buttons
-    add_image_window.generate_buttons(0, tool_menu_height, "Browse...", Colors.BLACK, Colors.GRAY, Colors.AQUA,
-                                      "Browse")
+
+
+
+
+    # select point for image window
+    select_image_point_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 350, 200,
+                              "Select a point for the image", 3)
+
+    # select point for image window buttons
+    select_image_point_window.generate_buttons(0, tool_menu_height, "OK", Colors.BLACK, Colors.GRAY,
+                                         Colors.AQUA, "Ok")
+
+    select_image_point_window.generate_buttons(0, tool_menu_height, "CANCEL", Colors.BLACK, Colors.GRAY,
+                                         Colors.AQUA, "Cancel")
+    select_image_point_window.generate_buttons(0, tool_menu_height, "Chosen point", Colors.GRAY, Colors.WHITE,
+                                         Colors.AQUA, "Chosen point")
+
+    info_windows.update({select_image_point_window: [False, "Select image point"]})
+
+    # add image window
+
+    add_image_window = Window(350, draw_surface_height + Config.PIXEL_HEIGHT, 200, 200,
+                              "Add image", 1)
+
+    # add image window buttoms
+
+    add_image_window.generate_buttons(350, tool_menu_height, "Browse...", Colors.BLACK, Colors.GRAY, Colors.AQUA,
+                                       "Browse")
 
     info_windows.update({add_image_window: [False, "Add image"]})
+
+
+    # browse window
+
+    select_image_window = Window(550, draw_surface_height + Config.PIXEL_HEIGHT, 100*len(file_operations.images_to_draw), 200,
+                              "Select image you want to display", len(file_operations.images_to_draw))
+
+    for index,image in enumerate(file_operations.images_to_draw.keys()):
+        image_name=image[:len(image)-4]
+        select_image_window.generate_buttons(550, tool_menu_height, image_name, Colors.BLACK, Colors.GRAY, Colors.AQUA,
+                                         str(image))
+
+    info_windows.update({select_image_window: [False, "Select image"]})
+
+
+
+
+
+
+
 
     # add text window
     add_text_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 630, 200,
@@ -243,7 +305,7 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
     # choose text point window
 
     choose_point_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 300, 200,
-                                 "Choose place for text", 3)
+                                 "Select a point for text on the screen", 3)
 
     # choose text point window buttons
     choose_point_window.generate_buttons(0, tool_menu_height, "OK", Colors.BLACK, Colors.GRAY,

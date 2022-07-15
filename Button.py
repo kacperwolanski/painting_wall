@@ -123,7 +123,7 @@ def generate_buttons(tool_menu_length, tool_menu_height, draw_surface_length, dr
                               Colors.LIGHT_GRAY,
                               Colors.AQUA)
 
-    buttons.append([add_image_button, "Add image"])
+    buttons.append([add_image_button, "Select image point"])
     # generate add text button
     add_text_button = Button(draw_surface_length,
                              draw_surface_height + 3 * (function_button_height + Config.PIXEL_LENGTH),
