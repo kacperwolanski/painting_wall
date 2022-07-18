@@ -409,18 +409,18 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
                                            Text.filling_background_help_text, 5)
     info_windows.update({how_to_fill_background_window: [False, "Filling background"]})
 
-    how_to_add_image_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
-                                     "To add image: ", 5)
+    how_to_add_image_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 500, 200,
+                                     Text.adding_image_help_text, 5)
 
     info_windows.update({how_to_add_image_window: [False, "Adding image"]})
 
     how_to_add_color_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
-                                     "To add nwe color: ", 5)
+                                     Text.adding_new_color_help_text, 5)
 
     info_windows.update({how_to_add_color_window: [False, "Adding color"]})
 
     how_to_add_text_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
-                                    "To add text field: ", 5)
+                                    Text.adding_text_help_text, 5)
 
     info_windows.update({how_to_add_text_window: [False, "Adding text"]})
 
