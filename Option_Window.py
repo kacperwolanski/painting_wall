@@ -425,7 +425,7 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
     info_windows.update({how_to_add_text_window: [False, "Adding text"]})
 
     how_to_reset_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
-                                 "To reset: ", 5)
+                                 Text.resetting_help_text, 5)
 
     info_windows.update({how_to_reset_window: [False, "Resetting"]})
 
