@@ -11,6 +11,5 @@ An example of a text editor usage
 ![image](https://user-images.githubusercontent.com/101999487/179178894-f9e81a47-3169-4db9-a00d-8e6c7a572a83.png)
 
 You can add your images here
-![image](https://user-images.githubusercontent.com/101999487/179459821-68accb9e-20ff-4ee4-9e7e-20286e500e6b.png)
-
+![image](https://user-images.githubusercontent.com/101999487/179461471-f16aac56-c30c-4f33-8f50-b1732f69ce65.png)
 
