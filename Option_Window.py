@@ -3,7 +3,7 @@ import pygame
 import Button
 import Colors
 import Config
-
+import Text
 import Screen
 import Slider
 import file_operations
@@ -47,9 +47,12 @@ class Window:
         # images staff
         self.adding_images = False
         self.image_to_add = ""
-
-
         self.add_closing_buttom()
+
+        # help staff
+        self.how_to = ""
+        self.help_tools = ["Filling background", "Adding text", "Adding image", "Adding color", "Save/open project",
+                           "Adding shape", "Resetting"]
 
     def add_closing_buttom(self):
         closing_button_size = 5 * Config.PIXEL_LENGTH
@@ -67,11 +70,15 @@ class Window:
         pygame.draw.rect(main.WIN, Colors.BLACK, pygame.Rect(self.x, self.y, self.length, self.height),
                          Config.PIXEL_HEIGHT)
         # text_render
-        Screen.text_rendering(self.text, Colors.BLACK, Colors.LIGHT_GRAY,
-                              (self.x + self.length / 2, self.y + self.height / 4), Config.BASIC_FONT)
+        if len(self.text) < 70:
+            Text.text_rendering(self.text, Colors.BLACK, Colors.LIGHT_GRAY,
+                                (self.x + self.length / 2, self.y + self.height / 4), Config.BASIC_FONT)
+        else:
+            Text.long_text_rendering(self.text, Colors.BLACK, Colors.LIGHT_GRAY,
+                                     (self.x + self.length / 2, self.y + self.height / 4), Config.BASIC_FONT,
+                                     self.length)
 
         for button in self.buttons:
-
 
             button[0].draw_the_button()
             # close button
@@ -101,7 +108,7 @@ class Window:
                     self.clear = True
 
 
-# text font staff
+                # text font staff
                 elif button[1] == "Choose font size":
                     self.choosing_font_size = True
 
@@ -137,7 +144,7 @@ class Window:
                     self.choosing_text_background_color = True
 
 
-# adding images
+                # adding images
                 elif button[1] == "Browse":
                     self.adding_images = True
 
@@ -146,8 +153,9 @@ class Window:
                     self.image_to_add = file_operations.images_to_draw[button[1]][0]
 
 
-
-
+                # help buttons
+                elif button[1] in self.help_tools:
+                    self.how_to = button[1]
 
             # changing button's text
             if button[1] == "Write color":
@@ -226,23 +234,18 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
 
     info_windows.update({fill_background_window: [False, "Fill background"]})
 
-
-
-
-
-
     # select point for image window
     select_image_point_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 350, 200,
-                              "Select a point for the image", 3)
+                                       "Select a point for the image", 3)
 
     # select point for image window buttons
     select_image_point_window.generate_buttons(0, tool_menu_height, "OK", Colors.BLACK, Colors.GRAY,
-                                         Colors.AQUA, "Ok")
+                                               Colors.AQUA, "Ok")
 
     select_image_point_window.generate_buttons(0, tool_menu_height, "CANCEL", Colors.BLACK, Colors.GRAY,
-                                         Colors.AQUA, "Cancel")
+                                               Colors.AQUA, "Cancel")
     select_image_point_window.generate_buttons(0, tool_menu_height, "Chosen point", Colors.GRAY, Colors.WHITE,
-                                         Colors.AQUA, "Chosen point")
+                                               Colors.AQUA, "Chosen point")
 
     info_windows.update({select_image_point_window: [False, "Select image point"]})
 
@@ -254,33 +257,26 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
     # add image window buttoms
 
     add_image_window.generate_buttons(350, tool_menu_height, "Browse...", Colors.BLACK, Colors.GRAY, Colors.AQUA,
-                                       "Browse")
+                                      "Browse")
 
     info_windows.update({add_image_window: [False, "Add image"]})
 
-
     # browse window
 
-    select_image_window = Window(550, draw_surface_height + Config.PIXEL_HEIGHT, 100*len(file_operations.images_to_draw), 200,
-                              "Select image you want to display", len(file_operations.images_to_draw))
+    select_image_window = Window(550, draw_surface_height + Config.PIXEL_HEIGHT,
+                                 100 * len(file_operations.images_to_draw), 200,
+                                 "Select image you want to display", len(file_operations.images_to_draw))
 
-    for index,image in enumerate(file_operations.images_to_draw.keys()):
-        image_name=image[:len(image)-4]
+    for index, image in enumerate(file_operations.images_to_draw.keys()):
+        image_name = image[:len(image) - 4]
         select_image_window.generate_buttons(550, tool_menu_height, image_name, Colors.BLACK, Colors.GRAY, Colors.AQUA,
-                                         str(image))
+                                             str(image))
 
     info_windows.update({select_image_window: [False, "Select image"]})
 
-
-
-
-
-
-
-
     # add text window
     add_text_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 630, 200,
-                             "Choose font type, font size, text color and then click where you want to add text",
+                             "Choose font type, font size and text color ",
                              4)
 
     # add text window buttons
@@ -360,11 +356,12 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
     choose_text_color_window = Window(630, draw_surface_height + Config.PIXEL_HEIGHT, 350, 200,
                                       "Choose text color", 1)
     # choose text color window buttons
-    choose_text_color_window.generate_buttons(630, tool_menu_height-50, "Select color and click to add new font color",
+    choose_text_color_window.generate_buttons(630, tool_menu_height - 50,
+                                              "Select color and click to add new font color",
                                               Colors.BLACK, Colors.GRAY,
                                               Colors.AQUA, "Choose font color")
 
-    choose_text_color_window.generate_buttons(210, tool_menu_height+20,
+    choose_text_color_window.generate_buttons(210, tool_menu_height + 20,
                                               "Select color and click to add new background color",
                                               Colors.BLACK, Colors.GRAY,
                                               Colors.AQUA, "Choose text background color")
@@ -376,5 +373,70 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
                                  "More options", 5)
 
     info_windows.update({more_options_window: [False, "More options"]})
+
+    # help window
+
+    help_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 900, 200,
+                         "Here you can find tips of using this tool. Enjoy !", 10)
+
+    # help window buttons
+
+    help_window.generate_buttons(0, tool_menu_height, "Filling background", Colors.BLACK, Colors.GRAY,
+                                 Colors.AQUA, "Filling background")
+
+    help_window.generate_buttons(0, tool_menu_height, "Adding text", Colors.BLACK, Colors.GRAY,
+                                 Colors.AQUA, "Adding text")
+
+    help_window.generate_buttons(0, tool_menu_height, "Adding images", Colors.BLACK, Colors.GRAY,
+                                 Colors.AQUA, "Adding image")
+
+    help_window.generate_buttons(0, tool_menu_height, "Adding colors", Colors.BLACK, Colors.GRAY,
+                                 Colors.AQUA, "Adding color")
+
+    help_window.generate_buttons(0, tool_menu_height, "Save/open project", Colors.BLACK, Colors.GRAY,
+                                 Colors.AQUA, "Save/open project")
+
+    help_window.generate_buttons(0, tool_menu_height, "Add shape", Colors.BLACK, Colors.GRAY,
+                                 Colors.AQUA, "Adding shape")
+
+    help_window.generate_buttons(0, tool_menu_height, "Reset", Colors.BLACK, Colors.GRAY,
+                                 Colors.AQUA, "Resetting")
+
+    info_windows.update({help_window: [False, "Help window"]})
+
+    # help windows
+    how_to_fill_background_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 300, 200,
+                                           Text.filling_background_help_text, 5)
+    info_windows.update({how_to_fill_background_window: [False, "Filling background"]})
+
+    how_to_add_image_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
+                                     "To add image: ", 5)
+
+    info_windows.update({how_to_add_image_window: [False, "Adding image"]})
+
+    how_to_add_color_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
+                                     "To add nwe color: ", 5)
+
+    info_windows.update({how_to_add_color_window: [False, "Adding color"]})
+
+    how_to_add_text_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
+                                    "To add text field: ", 5)
+
+    info_windows.update({how_to_add_text_window: [False, "Adding text"]})
+
+    how_to_reset_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
+                                 "To reset: ", 5)
+
+    info_windows.update({how_to_reset_window: [False, "Resetting"]})
+
+    how_to_add_shape = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
+                              "To add shape: ", 5)
+
+    info_windows.update({how_to_add_shape: [False, "Adding shape"]})
+
+    how_to_save_open_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 400, 200,
+                                     "To save/open project: ", 5)
+
+    info_windows.update({how_to_save_open_window: [False, "Save/open project"]})
 
     return info_windows

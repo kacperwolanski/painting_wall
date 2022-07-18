@@ -9,4 +9,10 @@ for filename in os.listdir('images'):
     path = 'images/' + filename
     image = pygame.image.load(path)
     images_to_draw.update({filename: [image,()]})
-print(images_to_draw)
+
+def save_the_project(pixels):
+    pass
+
+
+def open_saved_project():
+    pass
