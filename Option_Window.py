@@ -1,5 +1,4 @@
 import pygame
-
 import Button
 import Colors
 import Config
@@ -54,6 +53,9 @@ class Window:
         self.help_tools = ["Filling background", "Adding text", "Adding image", "Adding color", "Save/open project",
                            "Adding shape", "Resetting"]
 
+        # shape staff
+        self.shape_width = 0
+
     def add_closing_buttom(self):
         closing_button_size = 5 * Config.PIXEL_LENGTH
         closing_button = Button.Button(self.x + self.length - closing_button_size, self.y, closing_button_size,
@@ -63,6 +65,7 @@ class Window:
         self.buttons.append([closing_button, "X"])
 
     def pop_window(self, drawing_surface):
+
 
         # window surface
         pygame.draw.rect(main.WIN, Colors.LIGHT_GRAY, pygame.Rect(self.x, self.y, self.length, self.height))
@@ -187,6 +190,14 @@ class Window:
             if slider[1] == "Choose font size":
                 self.value = slider[0].return_val()
 
+            if slider[1] == "Choose shape size":
+
+                self.value = slider[0].return_val()
+
+            elif slider[1] == "Choose shape width":
+
+                self.shape_width = slider[0].return_val()
+
     def generate_buttons(self, x, y, text, text_front_color, text_backing_color, activate_color, buttom_name):
         if len(text) < 10:
             self.button_length = len(text) * 3 * Config.PIXEL_LENGTH
@@ -236,7 +247,7 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
 
     # select point for image window
     select_image_point_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 350, 200,
-                                       "Select a point for the image", 3)
+                                       "Select a point for image", 3)
 
     # select point for image window buttons
     select_image_point_window.generate_buttons(0, tool_menu_height, "OK", Colors.BLACK, Colors.GRAY,
@@ -438,5 +449,33 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
                                      "To save/open project: ", 5)
 
     info_windows.update({how_to_save_open_window: [False, "Save/open project"]})
+
+    # shape choosing window
+
+    select_shape_point_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 350, 200,
+                                       "Select a point for shape", 3)
+
+    # select point for shape window buttons
+    select_shape_point_window.generate_buttons(0, tool_menu_height, "OK", Colors.BLACK, Colors.GRAY,
+                                               Colors.AQUA, "Ok")
+
+    select_shape_point_window.generate_buttons(0, tool_menu_height, "CANCEL", Colors.BLACK, Colors.GRAY,
+                                               Colors.AQUA, "Cancel")
+    select_shape_point_window.generate_buttons(0, tool_menu_height, "Chosen point", Colors.GRAY, Colors.WHITE,
+                                               Colors.AQUA, "Chosen point")
+
+    info_windows.update({select_shape_point_window: [False, "Select shape point"]})
+
+    # shape size window
+    shape_size_window = Window(350, draw_surface_height + Config.PIXEL_HEIGHT, 200, 200,
+                               "Adjust shape size", 3)
+
+    shape_size_window.generate_sliders(400, tool_menu_height + 100, 100, 20, Colors.GRAY, Colors.BLACK,
+                                       "Choose shape size")
+
+    shape_size_window.generate_sliders(400, tool_menu_height + 150, 100, 20, Colors.GRAY, Colors.BLACK,
+                                       "Choose shape width")
+
+    info_windows.update({shape_size_window: [False, "Select shape size"]})
 
     return info_windows
