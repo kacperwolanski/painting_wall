@@ -79,12 +79,11 @@ def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool
     for key in shapes_to_draw:
         if shapes_to_draw[key][0]:
 
-
             x = shapes_to_draw[key][0][0]
             y = shapes_to_draw[key][0][1]
             size = shapes_to_draw[key][1]
             width = shapes_to_draw[key][2]
-            color = Colors.BLACK
+            color = shapes_to_draw[key][3]
             key = key[:key.index(" ")]
             if key == "Rectangle":
 
@@ -96,10 +95,11 @@ def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool
             elif key == "Square":
                 pygame.draw.rect(main.WIN, color, pygame.Rect(x, y, size * 10, size * 10), width)
             elif key == "Polygon":
-                pygame.draw.polygon(main.WIN,color,[(x,y),(x,y+size),(x+size,y+size),(x+2*size,y+size)])
+                pygame.draw.polygon(main.WIN, color,
+                                    [(x, y), (x, y + size), (x + size, y + size), (x + 2 * size, y + size)])
             elif key == "Triangle":
                 pygame.draw.polygon(main.WIN, color,
-                                    [(x, y), (x, y + 10*size), (x + 10*size, y + 10*size),],width)
+                                    [(x, y), (x, y + 10 * size), (x + 10 * size, y + 10 * size), ], width)
             elif key == "Line":
                 pass
 

@@ -162,7 +162,8 @@ class Screen:
                 # shapes
                 elif button[1] in self.shapes:
                     self.new_shape = button[1]
-                    self.shapes_to_draw.update({self.new_shape + " " + str(len(self.shapes_to_draw)+1): [(),0,0]})
+                    self.shapes_to_draw.update(
+                        {self.new_shape + " " + str(len(self.shapes_to_draw) + 1): [(), 0, 0, ""]})
                     self.activate_window("Select shape point")
 
 
@@ -426,7 +427,7 @@ class Screen:
                     self.shapes_to_draw[self.new_shape + " " + str(len(self.shapes_to_draw))][0] = self.value
                     self.shapes_to_draw[self.new_shape + " " + str(len(self.shapes_to_draw))][1] = window.value
                     self.shapes_to_draw[self.new_shape + " " + str(len(self.shapes_to_draw))][2] = window.shape_width
-                    # self.shapes_to_draw.update({self.new_shape+" "+str(len(self.shapes_to_draw)): [self.value, window.value, window.shape_width]})
+                    self.shapes_to_draw[self.new_shape + " " + str(len(self.shapes_to_draw))][3] = self.actual_color
 
                 # reset values
                 self.info_windows[window][0] = window.is_active

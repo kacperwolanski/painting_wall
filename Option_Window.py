@@ -66,7 +66,6 @@ class Window:
 
     def pop_window(self, drawing_surface):
 
-
         # window surface
         pygame.draw.rect(main.WIN, Colors.LIGHT_GRAY, pygame.Rect(self.x, self.y, self.length, self.height))
         # poping 3d  frame
