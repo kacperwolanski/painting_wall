@@ -2,7 +2,7 @@ import pygame
 import Config
 import Colors
 import main
-import Screen
+import Text
 import start_menu
 
 
@@ -27,8 +27,8 @@ class Button:
         pygame.draw.rect(self.WIN, color,
                          pygame.Rect(self.x, self.y, self.length, self.height))
 
-        Screen.text_rendering(self.text, self.text_front_color, color,
-                              (self.x + self.length / 2, self.y + self.height / 2),Config.BASIC_FONT)
+        Text.text_rendering(self.text, self.text_front_color, color,
+                            (self.x + self.length / 2, self.y + self.height / 2), Config.BASIC_FONT)
 
     def button_press(self):
 
@@ -153,6 +153,18 @@ def generate_buttons(tool_menu_length, tool_menu_height, draw_surface_length, dr
                                  Colors.AQUA)
 
     buttons.append([more_options_button, "More options"])
+
+    # generate help button
+
+    help_button = Button(draw_surface_length,
+                         draw_surface_height + 5 * (
+                                 function_button_height + Config.PIXEL_LENGTH),
+                         2 * function_button_length, function_button_height, "Help",
+                         Colors.BLACK,
+                         Colors.LIGHT_GRAY,
+                         Colors.AQUA)
+
+    buttons.append([help_button, "Help"])
 
     return buttons
 
