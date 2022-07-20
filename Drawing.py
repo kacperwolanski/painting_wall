@@ -8,6 +8,7 @@ WIN = main.WIN
 palette_height = 1
 
 
+
 def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool_menu_height, actual_color,
                 x_amount_of_shapes, shapes, images, shapes_to_draw):
     # draw images
@@ -15,8 +16,9 @@ def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool
         WIN.blit(image[0], image[1])
 
     # draw shapes
+
     for key in shapes_to_draw:
-        if shapes_to_draw[key][0]:
+        if len(shapes_to_draw[key][0])==2 and shapes_to_draw[key][3]:
 
             x = shapes_to_draw[key][0][0]
             y = shapes_to_draw[key][0][1]
@@ -40,7 +42,7 @@ def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool
                 pygame.draw.polygon(main.WIN, color,
                                     [(x, y), (x, y + 10 * size), (x + 10 * size, y + 10 * size), ], width)
             elif key == "Line":
-                pass
+                pygame.draw.line(main.WIN,color,x,y,width)
 
     # draw limiting white rects
     pygame.draw.rect(WIN, Colors.BACKGROUND,

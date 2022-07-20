@@ -479,8 +479,8 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
 
     # multiple point choose
 
-    multiple_point_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 770, 200,
-                                   "Select points for shape", 9)
+    multiple_point_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 300, 200,
+                                   "Select points for shape", 7)
 
     multiple_point_window.generate_buttons(0, tool_menu_height, "OK", Colors.BLACK, Colors.GRAY,
                                            Colors.AQUA, "Ok")
@@ -489,14 +489,10 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
                                            Colors.AQUA, "Cancel")
 
     multiple_point_window.generate_buttons(0, tool_menu_height, "First chosen point", Colors.GRAY, Colors.WHITE,
-                                           Colors.AQUA, "First chosen point")
+                                           Colors.AQUA, "Chosen point")
 
-    multiple_point_window.generate_buttons(0, tool_menu_height, "Second chosen point", Colors.GRAY, Colors.WHITE,
-                                           Colors.AQUA, "Second chosen point")
-    multiple_point_window.generate_buttons(0, tool_menu_height, "Third chosen point", Colors.GRAY, Colors.WHITE,
-                                           Colors.AQUA, "Third chosen point")
-    multiple_point_window.generate_buttons(0, tool_menu_height, "Forth chosen point", Colors.GRAY, Colors.WHITE,
-                                           Colors.AQUA, "Forth chosen point")
+
+
 
     info_windows.update({multiple_point_window: [False, "Multiple points"]})
     return info_windows

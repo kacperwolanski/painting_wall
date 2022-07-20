@@ -3,7 +3,7 @@ import pygame
 import Colors
 
 #screen staff
-FPS = 144
+FPS = 72
 
 PIXEL_LENGTH = 4
 PIXEL_HEIGHT = 4
