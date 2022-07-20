@@ -11,7 +11,7 @@ An example of a text editor usage.
 ![image](https://user-images.githubusercontent.com/101999487/179178894-f9e81a47-3169-4db9-a00d-8e6c7a572a83.png)
 
 You can add your images here.
-![image](https://user-images.githubusercontent.com/101999487/179461471-f16aac56-c30c-4f33-8f50-b1732f69ce65.png)
+![image](https://user-images.githubusercontent.com/101999487/179980325-78e39cf8-a7fc-43a6-b9f2-490012feaa48.png)
 
 I added simple help desk window.
 ![image](https://user-images.githubusercontent.com/101999487/179511159-d03892ca-ba86-4c44-b995-6e86e6aec26d.png)
