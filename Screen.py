@@ -410,10 +410,7 @@ class Screen:
                                                 Colors.AQUA, "Third chosen point")
 
                     if len(self.value) < 2:
-                        print(len(self.value))
                         self.choose_point(window, "Select shape size")
-
-
 
                 elif self.info_windows[window][1] == "Select shape size":
                     Text.text_rendering("Adjust size", Colors.BLACK, Colors.LIGHT_GRAY, (450, 750), basic_font)
