@@ -50,7 +50,7 @@ def generate_sliders(draw_surface_length, tool_menu_length, actual_color):
     width_slider = Slider(draw_surface_length + tool_menu_length // 4,
                           Config.PIXEL_LENGTH * 2,
                           tool_menu_length // 2, Config.PIXEL_LENGTH * 5,
-                          Colors.LIGHT_GRAY, actual_color)
+                          Colors.SLIDERS, actual_color)
 
     sliders.append([width_slider, 'actual_drawing_width'])
     return sliders

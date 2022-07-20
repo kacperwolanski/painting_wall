@@ -53,7 +53,7 @@ def generate_buttons(tool_menu_length, tool_menu_height, draw_surface_length, dr
                      x_amount_of_shapes):
     buttons = []
 
-    # generate draw reseting button
+    # generate draw resetting button
 
     function_button_height = 5 * Config.PIXEL_LENGTH
     function_button_length = 10 * Config.PIXEL_LENGTH
@@ -69,7 +69,7 @@ def generate_buttons(tool_menu_length, tool_menu_height, draw_surface_length, dr
     save_draw_button = Button(Config.SCREEN_LENGTH - 10 * Config.PIXEL_LENGTH,
                               tool_menu_height + function_button_height + Config.PIXEL_LENGTH,
                               function_button_length, function_button_height, "Save", Colors.BLACK,
-                              Colors.LIGHT_GRAY,
+                              Colors.BUTTONS,
                               Colors.AQUA)
 
     buttons.append([save_draw_button, "Save_draw"])
@@ -79,7 +79,7 @@ def generate_buttons(tool_menu_length, tool_menu_height, draw_surface_length, dr
     open_draw_button = Button(Config.SCREEN_LENGTH - 10 * Config.PIXEL_LENGTH,
                               tool_menu_height + 2 * (function_button_height + Config.PIXEL_LENGTH),
                               function_button_length, function_button_height, "Open", Colors.BLACK,
-                              Colors.LIGHT_GRAY,
+                              Colors.BUTTONS,
                               Colors.AQUA)
 
     buttons.append([open_draw_button, "Open_draw"])
@@ -91,7 +91,7 @@ def generate_buttons(tool_menu_length, tool_menu_height, draw_surface_length, dr
                               tool_menu_length // x_amount_of_shapes - Config.PIXEL_LENGTH,
                               tool_menu_height // (2 * x_amount_of_shapes) - Config.PIXEL_LENGTH,
                               name_of_shape, Colors.BLACK,
-                              Colors.WHITE,
+                              Colors.BUTTONS,
                               Colors.AQUA)
 
         buttons.append([shape_button, name_of_shape])
@@ -101,7 +101,7 @@ def generate_buttons(tool_menu_length, tool_menu_height, draw_surface_length, dr
                                         draw_surface_height,
                                         2 * function_button_length, function_button_height,
                                         "Fill background", Colors.BLACK,
-                                        Colors.LIGHT_GRAY,
+                                        Colors.BUTTONS,
                                         Colors.AQUA)
 
     buttons.append([fill_the_background_button, "Fill background"])
@@ -111,7 +111,7 @@ def generate_buttons(tool_menu_length, tool_menu_height, draw_surface_length, dr
                               draw_surface_height + function_button_height + Config.PIXEL_LENGTH,
                               2 * function_button_length, function_button_height, "Add color",
                               Colors.BLACK,
-                              Colors.LIGHT_GRAY,
+                              Colors.BUTTONS,
                               Colors.AQUA)
 
     buttons.append([add_color_button, "Add color"])
@@ -120,7 +120,7 @@ def generate_buttons(tool_menu_length, tool_menu_height, draw_surface_length, dr
     add_image_button = Button(draw_surface_length,
                               draw_surface_height + 2 * (function_button_height + Config.PIXEL_LENGTH),
                               2 * function_button_length, function_button_height, "Add image", Colors.BLACK,
-                              Colors.LIGHT_GRAY,
+                              Colors.BUTTONS,
                               Colors.AQUA)
 
     buttons.append([add_image_button, "Select image point"])
@@ -128,7 +128,7 @@ def generate_buttons(tool_menu_length, tool_menu_height, draw_surface_length, dr
     add_text_button = Button(draw_surface_length,
                              draw_surface_height + 3 * (function_button_height + Config.PIXEL_LENGTH),
                              2 * function_button_length, function_button_height, "Add text", Colors.BLACK,
-                             Colors.LIGHT_GRAY,
+                             Colors.BUTTONS,
                              Colors.AQUA)
 
     buttons.append([add_text_button, "Add text"])
@@ -138,7 +138,7 @@ def generate_buttons(tool_menu_length, tool_menu_height, draw_surface_length, dr
     rubber_button = Button(draw_surface_length + 2 * Config.PIXEL_LENGTH,
                            tool_menu_height // 10 + 7 * Config.PIXEL_LENGTH,
                            2 * function_button_length, function_button_height, "Rubber", Colors.BLACK,
-                           Colors.LIGHT_GRAY,
+                           Colors.BUTTONS,
                            Colors.AQUA)
 
     buttons.append([rubber_button, "Rubber"])
@@ -149,7 +149,7 @@ def generate_buttons(tool_menu_length, tool_menu_height, draw_surface_length, dr
                                          function_button_height + Config.PIXEL_LENGTH),
                                  2 * function_button_length, function_button_height, "More options",
                                  Colors.BLACK,
-                                 Colors.LIGHT_GRAY,
+                                 Colors.BUTTONS,
                                  Colors.AQUA)
 
     buttons.append([more_options_button, "More options"])
@@ -161,7 +161,7 @@ def generate_buttons(tool_menu_length, tool_menu_height, draw_surface_length, dr
                                  function_button_height + Config.PIXEL_LENGTH),
                          2 * function_button_length, function_button_height, "Help",
                          Colors.BLACK,
-                         Colors.LIGHT_GRAY,
+                         Colors.BUTTONS,
                          Colors.AQUA)
 
     buttons.append([help_button, "Help"])
