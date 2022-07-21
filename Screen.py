@@ -85,6 +85,7 @@ class Screen:
                                                   Config.palette_height)
         self.realize_the_tools()
         self.generate_tools()
+
         pygame.display.update()
 
     def generate_pixels(self):
@@ -167,10 +168,22 @@ class Screen:
                         self.activate_window("Select shape point")
                     else:
                         self.value = []
+                        for key in self.info_windows.keys():
+
+                            if self.info_windows[key][1] == 'Multiple points':
+                                key.buttons = key.buttons[:3]
+                                key.button_x_offset = 150
+                                key.generate_buttons(0, self.tool_menu_height, "Chosen point", Colors.GRAY,
+                                                     Colors.WHITE,
+                                                     Colors.AQUA, "Chosen point")
+
+
                         self.activate_window("Multiple points")
 
                     self.shapes_to_draw.update(
                         {self.new_shape[-1][0] + " " + str(len(self.shapes_to_draw) + 1): [self.value, 0, 0, ""]})
+
+
 
                 elif button[1] == "Help":
                     self.activate_window("Help window")
@@ -388,6 +401,7 @@ class Screen:
                         window.image_to_add = ""
 
                 elif self.info_windows[window][1] == "Help window":
+
                     if window.how_to:
                         self.activate_window(window.how_to)
                         Text.long_text_rendering(window.text, Colors.BLACK, Colors.LIGHT_GRAY,
@@ -422,7 +436,6 @@ class Screen:
                 self.info_windows[window][0] = window.is_active
                 self.keyboard_input = ""
 
-
     # text staff
     def blit_text(self):
         # width adjusting
@@ -451,7 +464,6 @@ class Screen:
                 text.pop_text()
 
     def choose_point(self, window, next_window):
-
 
         if self.actual_color == Colors.BLACK:
             self.actual_color = Colors.WHITE
