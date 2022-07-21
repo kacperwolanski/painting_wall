@@ -18,9 +18,6 @@ def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool
 
     for key in shapes_to_draw:
 
-        print(len(shapes_to_draw[key][0]))
-        print(shapes_to_draw)
-
         if len(shapes_to_draw[key][0]) >= 2 and shapes_to_draw[key][3]:
             x = shapes_to_draw[key][0][0]
             y = shapes_to_draw[key][0][1]
@@ -47,11 +44,14 @@ def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool
 
             elif len(shapes_to_draw[key][0]) == 3:
                 z = shapes_to_draw[key][0][2]
-                key = key[:key.index(" ")]
+                pygame.draw.polygon(main.WIN, color,[x, y, z], width)
 
-                if key == "Triangle":
 
-                    pygame.draw.polygon(main.WIN, color,[x, y, z], width)
+            elif len(shapes_to_draw[key][0])==4:
+                z = shapes_to_draw[key][0][2]
+                p = shapes_to_draw[key][0][3]
+
+                pygame.draw.polygon(main.WIN, color, [x, y, z,p], width)
 
     # draw limiting white rects
     pygame.draw.rect(WIN, Colors.BACKGROUND,
