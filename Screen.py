@@ -16,10 +16,10 @@ basic_font = Config.BASIC_FONT
 
 class Screen:
     def __init__(self):
-        self.draw_surface_length = Config.WINDOW_LENGTH * (Config.PIXEL_LENGTH - 1)
-        self.draw_surface_height = Config.WINDOW_HEIGHT * (Config.PIXEL_HEIGHT - 1) + 1
-        self.tool_menu_length = Config.SCREEN_LENGTH - self.draw_surface_length
-        self.tool_menu_height = self.draw_surface_height
+        self.draw_surface_length = Config.DRAW_SURFACE_LENGTH
+        self.draw_surface_height = Config.DRAW_SURFACE_HEIGHT
+        self.tool_menu_length = Config.TOOL_MENU_LENGTH
+        self.tool_menu_height = Config.DRAW_SURFACE_HEIGHT
         self.draw_surface = pygame.Rect(0, 0, self.draw_surface_length, self.draw_surface_height)
         self.pixels = []
 
@@ -54,7 +54,7 @@ class Screen:
         self.shapes = {'Rectangle': [], 'Circle': [], 'Polygon': [], 'Line': [], 'Square': [], 'Triangle': []}
         self.shapes_counter = 0
         self.shapes_to_draw = {}
-        self.new_shape = ""
+        self.new_shape = []
 
         # images staff
         self.images = []
@@ -71,14 +71,12 @@ class Screen:
 
     # drawing staff
     def draw_the_window(self):
-        WIN.fill(Colors.WHITE)
-        print(len(self.shapes_to_draw))
-        print(self.shapes_to_draw)
+        WIN.fill(Colors.BACKGROUND)
+
         self.make_the_drawing()
         Drawing.draw_frames(self.draw_surface_length, self.draw_surface_height, self.tool_menu_length,
                             self.tool_menu_height, self.actual_color, self.x_amount_of_shapes, self.shapes, self.images,
                             self.shapes_to_draw)
-
         self.blit_text()
         self.realize_info_windows()
         self.samples = []
@@ -87,6 +85,7 @@ class Screen:
                                                   Config.palette_height)
         self.realize_the_tools()
         self.generate_tools()
+
         pygame.display.update()
 
     def generate_pixels(self):
@@ -116,16 +115,12 @@ class Screen:
             pygame.draw.rect(WIN, i.color, i)
 
     def realize_the_tools(self):
-
         # rubber
         if self.rubber:
-            # rubber cleaning
-
             # rubber frame
             pygame.draw.rect(WIN, Colors.BLACK, pygame.Rect(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1],
                                                             3 * self.actual_drawing_width,
                                                             3 * self.actual_drawing_width), 2)
-
         # sliders
         for slider in self.sliders:
             slider[0].draw_the_slider()
@@ -141,9 +136,7 @@ class Screen:
                 if button[1] == "Reset":
                     Button.reset_button(self.pixels, Colors.WHITE)
                 # save draw button
-
                 elif button[1] == "Rubber":
-
                     if self.rubber:
                         self.rubber = False
                     else:
@@ -161,16 +154,39 @@ class Screen:
 
                 # shapes
                 elif button[1] in self.shapes:
-                    self.new_shape = button[1]
+                    self.new_shape.append([button[1], 1])
+
+                    if button[1] == 'Polygon':
+                        self.new_shape[-1][1] += 3
+                    elif button[1] == 'Triangle':
+                        self.new_shape[-1][1] += 2
+                    elif button[1] == 'Line':
+                        self.new_shape[-1][1] += 1
+
+                    if self.new_shape[-1][1] == 1:
+                        self.value = ()
+                        self.activate_window("Select shape point")
+                    else:
+                        self.value = []
+                        for key in self.info_windows.keys():
+
+                            if self.info_windows[key][1] == 'Multiple points':
+                                key.buttons = key.buttons[:3]
+                                key.button_x_offset = 150
+                                key.generate_buttons(0, self.tool_menu_height, "Chosen point", Colors.GRAY,
+                                                     Colors.WHITE,
+                                                     Colors.AQUA, "Chosen point")
+
+
+                        self.activate_window("Multiple points")
+
                     self.shapes_to_draw.update(
-                        {self.new_shape + " " + str(len(self.shapes_to_draw) + 1): [(), 0, 0, ""]})
-                    self.activate_window("Select shape point")
+                        {self.new_shape[-1][0] + " " + str(len(self.shapes_to_draw) + 1): [self.value, 0, 0, ""]})
 
 
 
                 elif button[1] == "Help":
                     self.activate_window("Help window")
-
 
                 elif button[1] in self.info_windows_names:
                     if self.check_if_other_windows_work(button[1]):
@@ -259,6 +275,7 @@ class Screen:
                             pygame.draw.rect(WIN, self.value, pygame.Rect(215, 705, 15, 15))
 
                 elif self.info_windows[window][1] == "Add text":
+
                     if self.actual_color == Colors.BLACK:
                         self.actual_color = Colors.WHITE
                     if window.chosen_point:
@@ -368,19 +385,8 @@ class Screen:
                                      pygame.Rect(750, self.tool_menu_height + 170, 100, 20))
 
                 elif self.info_windows[window][1] == "Select image point":
-                    if self.actual_color == Colors.BLACK:
-                        self.actual_color = Colors.WHITE
-                    self.activate_window("Select image point")
-                    if window.chosen_point:
-                        if window.allow:
-                            window.allow = False
-                            self.value = window.chosen_point
-                            window.chosen_point = ()
-                            self.activate_window("Add image")
 
-                        elif window.refuse:
-                            window.refuse = False
-                            window.chosen_point = ()
+                    self.choose_point(window, "Add image")
 
                 elif self.info_windows[window][1] == "Add image":
 
@@ -395,6 +401,7 @@ class Screen:
                         window.image_to_add = ""
 
                 elif self.info_windows[window][1] == "Help window":
+
                     if window.how_to:
                         self.activate_window(window.how_to)
                         Text.long_text_rendering(window.text, Colors.BLACK, Colors.LIGHT_GRAY,
@@ -405,29 +412,25 @@ class Screen:
 
 
                 elif self.info_windows[window][1] == "Select shape point":
+                    self.choose_point(window, "Select shape size")
 
-                    if self.actual_color == Colors.BLACK:
-                        self.actual_color = Colors.WHITE
+                elif self.info_windows[window][1] == "Multiple points":
+                    if len(self.value) < self.new_shape[-1][1]:
+                        self.choose_point(window, "Select shape size")
 
-                    if window.chosen_point:
-                        if window.allow:
-                            window.allow = False
-                            self.value = window.chosen_point
-
-                            self.activate_window("Select shape size")
-
-                        elif window.refuse:
-                            window.refuse = False
-                            window.chosen_point = ()
 
                 elif self.info_windows[window][1] == "Select shape size":
-                    Text.text_rendering("Adjust size", Colors.BLACK, Colors.LIGHT_GRAY, (450, 750), basic_font)
-                    Text.text_rendering("Adjust width", Colors.BLACK, Colors.LIGHT_GRAY, (450, 800), basic_font)
+                    Text.text_rendering("Adjust size", Colors.BLACK, Colors.LIGHT_GRAY, (850, 750), basic_font)
+                    Text.text_rendering("Adjust width", Colors.BLACK, Colors.LIGHT_GRAY, (850, 800), basic_font)
+                    Text.text_rendering("Color:", Colors.BLACK, Colors.LIGHT_GRAY, (870, 848), basic_font)
+                    pygame.draw.rect(WIN, self.actual_color, pygame.Rect(900, 840, 50, 15))
 
-                    self.shapes_to_draw[self.new_shape + " " + str(len(self.shapes_to_draw))][0] = self.value
-                    self.shapes_to_draw[self.new_shape + " " + str(len(self.shapes_to_draw))][1] = window.value
-                    self.shapes_to_draw[self.new_shape + " " + str(len(self.shapes_to_draw))][2] = window.shape_width
-                    self.shapes_to_draw[self.new_shape + " " + str(len(self.shapes_to_draw))][3] = self.actual_color
+                    self.shapes_to_draw[self.new_shape[-1][0] + " " + str(len(self.shapes_to_draw))][0] = self.value
+                    self.shapes_to_draw[self.new_shape[-1][0] + " " + str(len(self.shapes_to_draw))][1] = window.value
+                    self.shapes_to_draw[self.new_shape[-1][0] + " " + str(len(self.shapes_to_draw))][
+                        2] = window.shape_width
+                    self.shapes_to_draw[self.new_shape[-1][0] + " " + str(len(self.shapes_to_draw))][
+                        3] = self.actual_color
 
                 # reset values
                 self.info_windows[window][0] = window.is_active
@@ -459,3 +462,37 @@ class Screen:
         for text in self.texts:
             if text.text_point:
                 text.pop_text()
+
+    def choose_point(self, window, next_window):
+
+        if self.actual_color == Colors.BLACK:
+            self.actual_color = Colors.WHITE
+        if window.chosen_point:
+            if isinstance(self.value, list) and len(self.value) < self.new_shape[-1][1]:
+                if window.allow:
+                    window.allow = False
+                    self.value.append(window.chosen_point)
+                    for btn in window.buttons:
+                        if btn[1] == "Chosen point":
+                            btn[1] += " Done"
+                    window.chosen_point = ()
+                    if len(window.buttons) < 3 + self.new_shape[-1][1]:
+                        window.generate_buttons(0, self.tool_menu_height, "Choose another point", Colors.GRAY,
+                                                Colors.WHITE,
+                                                Colors.AQUA, "Chosen point")
+                elif window.refuse:
+                    window.refuse = False
+                    self.value = []
+                    window.chosen_point = ()
+
+            elif isinstance(self.value, tuple):
+                if window.allow:
+                    window.allow = False
+                    self.value = window.chosen_point
+                    window.chosen_point = ()
+                elif window.refuse:
+                    window.refuse = False
+                    window.chosen_point = ()
+
+        if len(window.buttons) == 3 + self.new_shape[-1][1]:
+            self.activate_window(next_window)

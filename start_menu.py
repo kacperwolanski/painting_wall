@@ -4,13 +4,14 @@ import pygame
 import Config
 import Button
 import Colors
+import Text
 import file_operations
 import Option_Window
 import Screen
 import main
 
 
-def xxx():
+def start_menu():
     x = 0
     y = 0
     i = 0
@@ -58,6 +59,7 @@ def xxx():
 
         main.CLOCK.tick(Config.FPS)
         main.WIN.blit(file_operations.start_menu_image, (8, 8))
+        Text.text_rendering("Created by Kacper Wolański",Colors.AZURE,Colors.WHITE,(80,Config.SCREEN_HEIGHT-13),Config.BASIC_FONT)
 
         for window in windows.keys():
             if len(windows_names) < len(windows):

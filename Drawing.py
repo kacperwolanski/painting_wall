@@ -10,16 +10,65 @@ palette_height = 1
 
 def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool_menu_height, actual_color,
                 x_amount_of_shapes, shapes, images, shapes_to_draw):
+    # draw images
+    for image in images:
+        WIN.blit(image[0], image[1])
+
+    # draw shapes
+
+    for key in shapes_to_draw:
+
+        if len(shapes_to_draw[key][0]) >= 2 and shapes_to_draw[key][3]:
+            x = shapes_to_draw[key][0][0]
+            y = shapes_to_draw[key][0][1]
+            size = shapes_to_draw[key][1]
+            width = shapes_to_draw[key][2]
+            color = shapes_to_draw[key][3]
+
+            if len(shapes_to_draw[key][0]) == 2:
+                key = key[:key.index(" ")]
+                if key == "Rectangle":
+                    pygame.draw.rect(main.WIN, color,
+                                     pygame.Rect(x, y, size * 20, size * 10), width * 2)
+
+                elif key == "Circle":
+                    pygame.draw.circle(main.WIN, color, (x, y), 10 * size, width)
+                elif key == "Square":
+                    pygame.draw.rect(main.WIN, color, pygame.Rect(x, y, size * 10, size * 10), width)
+
+                elif key == "Line":
+                    line_slope_factor = (y[1] - x[1]) / (y[0] - x[0])
+                    pygame.draw.line(main.WIN, color, x,
+                                     ((y[0] + 10 * size * line_slope_factor), (y[1] + 10 * size * line_slope_factor)),
+                                     width)
+
+            elif len(shapes_to_draw[key][0]) == 3:
+                z = shapes_to_draw[key][0][2]
+                pygame.draw.polygon(main.WIN, color,[x, y, z], width)
+
+
+            elif len(shapes_to_draw[key][0])==4:
+                z = shapes_to_draw[key][0][2]
+                p = shapes_to_draw[key][0][3]
+
+                pygame.draw.polygon(main.WIN, color, [x, y, z,p], width)
+
+    # draw limiting white rects
+    pygame.draw.rect(WIN, Colors.BACKGROUND,
+                     pygame.Rect(Config.DRAW_SURFACE_LENGTH, 0, Config.TOOL_MENU_LENGTH, Config.DRAW_SURFACE_HEIGHT))
+    pygame.draw.rect(WIN, Colors.BACKGROUND, pygame.Rect(0, Config.DRAW_SURFACE_HEIGHT, Config.SCREEN_LENGTH,
+                                                         Config.SCREEN_HEIGHT - Config.DRAW_SURFACE_HEIGHT))
+
     # draw surface
-    pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
+    pygame.draw.rect(WIN, Colors.FRAMES,
                      pygame.Rect(0, 0, draw_surface_length, draw_surface_height), Config.PIXEL_LENGTH)
     # main menu
-    pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
+    pygame.draw.rect(WIN, Colors.FRAMES,
                      pygame.Rect(draw_surface_length, 0, tool_menu_length, tool_menu_height),
                      Config.PIXEL_LENGTH)
 
     # draw width adjusting frame
-    pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
+    pygame.draw.rect(WIN, Colors.FRAMES,
                      pygame.Rect(
                          draw_surface_length + tool_menu_length * 3 // 4 - Config.PIXEL_LENGTH,
                          Config.PIXEL_LENGTH,
@@ -32,7 +81,7 @@ def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool
 
     # draw palette surface
 
-    pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
+    pygame.draw.rect(WIN, Colors.FRAMES,
                      pygame.Rect(draw_surface_length, Config.PIXEL_LENGTH * 6, tool_menu_length,
                                  tool_menu_height // 10),
                      Config.PIXEL_LENGTH)
@@ -43,7 +92,7 @@ def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool
     shape_index = 0
 
     # draw shapes frame
-    pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
+    pygame.draw.rect(WIN, Colors.FRAMES,
                      pygame.Rect(
                          draw_surface_length, tool_menu_height // 10 * 2, tool_menu_length,
                                               tool_menu_height // 3 + Config.PIXEL_LENGTH),
@@ -53,14 +102,10 @@ def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool
     grid_length = tool_menu_length // x_amount_of_shapes
     grid_height = tool_menu_height // (2 * x_amount_of_shapes)
 
-    # draw images
-    for image in images:
-        WIN.blit(image[0], image[1])
-
     for x in range(x_amount_of_shapes):
         for y in range(len(shapes) // x_amount_of_shapes):
 
-            pygame.draw.rect(WIN, Colors.LIGHT_GRAY,
+            pygame.draw.rect(WIN, Colors.FRAMES,
                              pygame.Rect(
                                  x_offset, y_offset, tool_menu_length // x_amount_of_shapes,
                                                      tool_menu_height // (2 * x_amount_of_shapes)),
@@ -74,34 +119,6 @@ def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool
             y_offset += grid_height
         y_offset = tool_menu_height // 10 * 2
         x_offset += grid_length
-
-    # draw shapes
-    for key in shapes_to_draw:
-        if shapes_to_draw[key][0]:
-
-            x = shapes_to_draw[key][0][0]
-            y = shapes_to_draw[key][0][1]
-            size = shapes_to_draw[key][1]
-            width = shapes_to_draw[key][2]
-            color = shapes_to_draw[key][3]
-            key = key[:key.index(" ")]
-            if key == "Rectangle":
-
-                pygame.draw.rect(main.WIN, color,
-                                 pygame.Rect(x, y, size * 20, size * 10), width * 2)
-
-            elif key == "Circle":
-                pygame.draw.circle(main.WIN, color, (x, y), 10 * size, width)
-            elif key == "Square":
-                pygame.draw.rect(main.WIN, color, pygame.Rect(x, y, size * 10, size * 10), width)
-            elif key == "Polygon":
-                pygame.draw.polygon(main.WIN, color,
-                                    [(x, y), (x, y + size), (x + size, y + size), (x + 2 * size, y + size)])
-            elif key == "Triangle":
-                pygame.draw.polygon(main.WIN, color,
-                                    [(x, y), (x, y + 10 * size), (x + 10 * size, y + 10 * size), ], width)
-            elif key == "Line":
-                pass
 
 
 def draw_color_palette(tool_menu_length, tool_menu_height, draw_surface_length, color_choose, samples, palette_height):
@@ -131,7 +148,7 @@ def draw_color_palette(tool_menu_length, tool_menu_height, draw_surface_length, 
             pygame.draw.rect(WIN, color, sample)
 
             # grid
-            pygame.draw.rect(WIN, Colors.LIGHT_GRAY, pygame.Rect(x_pos, y_pos, sample_length, sample_length), 1)
+            pygame.draw.rect(WIN, Colors.FRAMES, pygame.Rect(x_pos, y_pos, sample_length, sample_length), 1)
 
             x_pos += sample_length
             index += 1

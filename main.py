@@ -16,7 +16,7 @@ class Paint:
     def main_loop(self):
 
         if Config.start_menu:
-            start_menu.xxx()
+            start_menu.start_menu()
 
         while Config.run:
             CLOCK.tick(Config.FPS)

@@ -466,15 +466,33 @@ def generate_info_windows(draw_surface_height, tool_menu_height):
     info_windows.update({select_shape_point_window: [False, "Select shape point"]})
 
     # shape size window
-    shape_size_window = Window(350, draw_surface_height + Config.PIXEL_HEIGHT, 200, 200,
+    shape_size_window = Window(800, draw_surface_height + Config.PIXEL_HEIGHT, 200, 200,
                                "Adjust shape size", 3)
 
-    shape_size_window.generate_sliders(400, tool_menu_height + 100, 100, 20, Colors.GRAY, Colors.BLACK,
+    shape_size_window.generate_sliders(850, tool_menu_height + 100, 100, 20, Colors.GRAY, Colors.BLACK,
                                        "Choose shape size")
 
-    shape_size_window.generate_sliders(400, tool_menu_height + 150, 100, 20, Colors.GRAY, Colors.BLACK,
+    shape_size_window.generate_sliders(850, tool_menu_height + 150, 100, 20, Colors.GRAY, Colors.BLACK,
                                        "Choose shape width")
 
     info_windows.update({shape_size_window: [False, "Select shape size"]})
 
+    # multiple point choose
+
+    multiple_point_window = Window(0, draw_surface_height + Config.PIXEL_HEIGHT, 800, 200,
+                                   "Select points for shape", 10)
+
+    multiple_point_window.generate_buttons(0, tool_menu_height, "OK", Colors.BLACK, Colors.GRAY,
+                                           Colors.AQUA, "Ok")
+
+    multiple_point_window.generate_buttons(0, tool_menu_height, "CANCEL", Colors.BLACK, Colors.GRAY,
+                                           Colors.AQUA, "Cancel")
+
+    multiple_point_window.generate_buttons(0, tool_menu_height, "First chosen point", Colors.GRAY, Colors.WHITE,
+                                           Colors.AQUA, "Chosen point")
+
+
+
+
+    info_windows.update({multiple_point_window: [False, "Multiple points"]})
     return info_windows
