@@ -3,7 +3,7 @@ import os
 
 images_to_draw = {}
 
-start_menu_image = pygame.image.load("start_menu.png")
+start_menu_image = pygame.image.load("images/start_menu.png")
 
 for filename in os.listdir('images'):
     path = 'images/' + filename
