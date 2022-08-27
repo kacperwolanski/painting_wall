@@ -58,6 +58,7 @@ class Screen:
 
         # images staff
         self.images = []
+        self.img_chords = ()
 
     def generate_tools(self):
         if self.append_tools:
@@ -177,7 +178,6 @@ class Screen:
                                                      Colors.WHITE,
                                                      Colors.AQUA, "Chosen point")
 
-
                         self.activate_window("Multiple points")
 
                     self.shapes_to_draw.update(
@@ -234,6 +234,7 @@ class Screen:
                 elif self.info_windows[window][1] == "Add color":
 
                     if window.color_adding:
+
                         if window.clear:
                             window.clear = False
 
@@ -273,6 +274,17 @@ class Screen:
 
                         else:
                             pygame.draw.rect(WIN, self.value, pygame.Rect(215, 705, 15, 15))
+
+
+
+
+
+
+
+
+
+
+
 
                 elif self.info_windows[window][1] == "Add text":
 
@@ -384,9 +396,15 @@ class Screen:
                     pygame.draw.rect(WIN, Config.BACKGROUND_TYPING_COLOR,
                                      pygame.Rect(750, self.tool_menu_height + 170, 100, 20))
 
-                elif self.info_windows[window][1] == "Select image point":
 
-                    self.choose_point(window, "Add image")
+
+
+                elif self.info_windows[window][1] == "Select image point":
+                    if window.chosen_point:
+                        self.img_chords = window.chosen_point
+                        self.activate_window("Add image")
+
+
 
                 elif self.info_windows[window][1] == "Add image":
 
@@ -396,9 +414,15 @@ class Screen:
 
                 elif self.info_windows[window][1] == "Select image":
                     if window.image_to_add:
-                        self.images.append([window.image_to_add, self.value])
-                        self.value = ()
+                        self.images.append([window.image_to_add, self.img_chords])
+
+                        self.img_chords = ()
                         window.image_to_add = ""
+
+
+
+
+
 
                 elif self.info_windows[window][1] == "Help window":
 
@@ -434,7 +458,9 @@ class Screen:
 
                 # reset values
                 self.info_windows[window][0] = window.is_active
-                self.keyboard_input = ""
+
+                if not window.color_adding:
+                    self.keyboard_input = ""
 
     # text staff
     def blit_text(self):

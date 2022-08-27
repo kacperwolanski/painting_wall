@@ -12,7 +12,8 @@ def draw_frames(draw_surface_length, draw_surface_height, tool_menu_length, tool
                 x_amount_of_shapes, shapes, images, shapes_to_draw):
     # draw images
     for image in images:
-        WIN.blit(image[0], image[1])
+
+        WIN.blit(image[0],image[1])
 
     # draw shapes
 
