@@ -1,5 +1,5 @@
 # Painting_wall
-This is a project of simple drawing program, which I created using python's "pygame" library.
+This is a project of simple painting program, which I created using python's "pygame" library.
 
 Main menu window.
 ![image](https://user-images.githubusercontent.com/101999487/180385617-bf2aa0b4-558f-4558-9cb4-298de57018a8.png)
