@@ -5,7 +5,11 @@ Main menu window.
 
 ## An example of a simple drawing.
 
-![Debut 4](https://user-images.githubusercontent.com/101999487/191750754-2272a0ab-a325-4cc2-a0b0-277e6b966f0d.gif)
+
+
+
+https://user-images.githubusercontent.com/101999487/191751636-7baebc0a-2379-4931-b5f5-c12c11fb18fe.mp4
+
 
 
 
